@@ -30,7 +30,6 @@ def main_loop():
 		#в зависимотсти от состояния игры, запскается новый цикл
 		if config.is_console_open:
 			init.console.opened()
-			
 		else:
 			if config.state_of_the_game["main menu"]:
 				main_menu_loop()
