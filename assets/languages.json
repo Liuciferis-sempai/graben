@@ -1,0 +1,140 @@
+{
+	"en": {
+		"LANGUAGE": "English",
+		"START": "start",
+		"SETTINGS": "settings",
+		"EXIT": "exit",
+		"SAVE": "save",
+		"BACK": "back",
+		"LEVEL SELECTION": "level selection",
+		"TUTORIAL": "tutorial",
+		"LEVEL": "level",
+		"CONTINUE": "continue",
+		"RESTART": "restart",
+		"MAIN MENU": "main menu",
+		"SETTINGS SAVE CONFIRM": "Do you want to save the settings?",
+		"SHOW_STATISTICS": "statistics",
+		"world_eater": "World Eater",
+		"NUMBER_OF_DEATHS": "number of deaths",
+		"NUMBER_OF_KILLS": "number og kills",
+		"TIME_IN_GAME": "time in game",
+		"EDITOR": "Editor",
+		"NEW_MAP": "new map",
+		"MAIN_WEAPON_EDITING": "edit main weapon",
+		"SECOND_WEAPON_EDITING": "edit second weapon",
+		"MELEE_WEAPON_EDITING": "edit melee weapon",
+		"GRENADE_EDITING": "edit grenade",
+		"MAP_EDITING": "Map editor",
+		"COMMISSARS_SPEECH": [
+			["Soldiers", "Commissar"],
+			["Soldiers, you are the proud warriors of Krieg", "Commissar"],
+			["In those trenches, on the other side of the dead land, sit the damned traitors and heretics", "Cammissar"],
+			["So unleash the Emperor's fury upon them!", "Commissar"],
+			["...", "Commissar"],
+			["*whistle sound*", "..."],
+			["Fix bayonets! Attack!", "Commissar"]
+		],
+		"MEET_WORLD_EATER": [
+			["RWAAAAR", "World Eater"],
+			["Blood for the blood god! Skull for the throne of skulls!", "World Eater"]
+		],
+		"SPEECH_BETWEEN_WORLD_EATER_AND_SALAMANDERS": [
+			["...", "Salamander"],
+			["...", "World Eater"],
+			["die.", "Salamander"],
+			["RWAAAAAR", "World Eater"]
+		]
+	},
+	"de": {
+		"LANGUAGE": "Deutsch",
+		"START": "starten",
+		"SETTINGS": "Einstellungen",
+		"EXIT": "beenden",
+		"SAVE": "speichern",
+		"BACK": "zurück",
+		"LEVEL SELECTION": "Level auswahl",
+		"TUTORIAL": "Anleitung",
+		"LEVEL": "Level",
+		"CONTINUE": "fortsetzen",
+		"RESTART": "neustart",
+		"MAIN MENU": "Hauptmenü",
+		"SETTINGS SAVE CONFIRM": "Möchten Sie die Einstellungen speichern?",
+		"SHOW_STATISTICS": "Statistiken",
+		"world_eater": "Weltenfresser",
+		"NUMBER_OF_DEATHS": "Anzahl der Todesfälle",
+		"NUMBER_OF_KILLS": "Anzahl der Morde",
+		"TIME_IN_GAME": "Zeit im Spiel",
+		"EDITOR": "Editor",
+		"NEW_MAP": "neue karte",
+		"MAIN_WEAPON_EDITING": "Hauptwaffe bearbeiten",
+		"SECOND_WEAPON_EDITING": "Zweitwaffe bearbeiten",
+		"MELEE_WEAPON_EDITING": "Nahkampfwaffe bearbeiten",
+		"GRENADE_EDITING": "Granate bearbeiten",
+		"MAP_EDITING": "Karteneditor",
+		"COMMISSARS_SPEECH": [
+			["Soldaten", "Kommissar"],
+			["Soldaten, ihr seid die stolzen Krieger von Krieg", "Kommissar"],
+			["In diesen Gräben, auf der anderen Seite des toten Landes, sitzen die verdammten Verräter und Ketzer", "Kommissar"],
+			["Also entfesselt den Zorn des Imperators auf sie!", "Kommissar"],
+			["...", "Kommissar"],
+			["*Pfeifton*", "..."],
+			["Bajonette aufpflanzen! Angriff!", "Kommissar"]
+		],
+		"MEET_WORLD_EATER": [
+			["RWAAAAR", "Weltenfresser"],
+			["Blut für den Blutgott! Schädel für den Thron der Schädel!", "Weltenfresser"]
+		],
+		"SPEECH_BETWEEN_WORLD_EATER_AND_SALAMANDERS": [
+			["...", "Salamander"],
+			["...", "Weltfresser"],
+			["stirb.", "Salamander"],
+			["RWAAAAAR", "Weltfresser"]
+		]
+	},
+	"ru": {
+		"LANGUAGE": "Русский",
+		"START": "начать",
+		"SETTINGS": "настройки",
+		"EXIT": "выход",
+		"SAVE": "сохранить",
+		"BACK": "назад",
+		"LEVEL SELECTION": "выбор уровня",
+		"TUTORIAL": "обучение",
+		"LEVEL": "уровень",
+		"CONTINUE": "продолжить",
+		"RESTART": "перезапустить",
+		"MAIN MENU": "главное меню",
+		"SETTINGS SAVE CONFIRM": "Хотите сохранить настройки?",
+		"SHOW_STATISTICS": "статистика",
+		"world_eater": "Пожиратель Миров",
+		"NUMBER_OF_DEATHS": "Количество смертей",
+		"NUMBER_OF_KILLS": "Количество убийств",
+		"TIME_IN_GAME": "Время в игре",
+		"EDITOR": "Редактор",
+		"NEW_MAP": "новая карта",
+		"MAIN_WEAPON_EDITING": "редактировать основного оружия",
+		"SECOND_WEAPON_EDITING": "редактировать второе оружие",
+		"MELEE_WEAPON_EDITING": "редактировать оружие ближнего боя",
+		"GRENADE_EDITING": "редактировать гранаты",
+		"MAP_EDITING": "Редактор карты",
+		"COMMISSARS_SPEECH": [
+			["Солдаты", "Комисар"],
+			["Солдаты, вы гордые воины Крига", "Комисар"],
+			["В тех окопах, по ту сторону мёртвой земли, сидят чёртовы предатели и еретики", "Комисар"],
+			["Так что обруште на них ярость Императора!", "Комисар"],
+			["...", "Комисар"],
+			["*свисток*", "..."],
+			["Примкнуть штыки! В атаку!", "Комисар"]
+		],
+		"MEET_WORLD_EATER": [
+			["РВААААР", "Пожиратель Миров"],
+			["Кровь для бога крови! Череп для трона из черепов!", "Пожиратель Миров"]
+		],
+		"SPEECH_BETWEEN_WORLD_EATER_AND_SALAMANDERS": [
+			["...", "Саламандр"],
+			["...", "Пожиратель Миров"],
+			["умри.", "Саламандр"],
+			["РВААААР", "Пожиратель Миров"]
+		]
+	}
+}

@@ -1,0 +1,227 @@
+{
+	"map_name": "MAP_1",
+	"map": [
+	["o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["t", "b", "U", "o", "o", "o", "I", "t", "t", "t", "U", "o", "o", "o", "I", "t", "t", "t", "U", "o", "o", "o", "I", "t", "t", "t", "U", "o", "o", "o", "I", "t", "t", "t", "U", "o", "o"],
+	["o", "o", "P", "t", "t", "t", "Z", "o", "o", "o", "P", "t", "t", "t", "Z", "o", "o", "o", "P", "t", "t", "t", "Z", "o", "o", "o", "P", "t", "t", "t", "Z", "o", "o", "o", "P", "t", "t"],
+	["o", "o", "o", "o", "o", "o", "o", "o", "s", "s", "s", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["o", "o", "o", "o", "o", "o", "o", "o", "s", "s", "s", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["o", "o", "o", "o", "o", "o", "o", "o", "s", "s", "s", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["o", "o", "o", "o", "o", "o", "o", "o", "s", "s", "s", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["o", "o", "o", "o", "o", "o", "o", "o", "s", "s", "s", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["o", "o", "o", "o", "o", "o", "o", "o", "s", "s", "s", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["o", "o", "o", "o", "o", "o", "o", "o", "s", "s", "s", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["o", "o", "o", "o", "o", "o", "o", "o", "s", "s", "s", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["o", "o", "o", "o", "o", "o", "o", "o", "s", "s", "s", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["o", "o", "o", "o", "o", "o", "o", "o", "s", "s", "s", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["o", "o", "o", "o", "o", "o", "o", "o", "s", "s", "s", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["o", "o", "o", "o", "o", "o", "o", "o", "s", "s", "s", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["o", "o", "o", "o", "o", "o", "o", "o", "s", "s", "s", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["o", "o", "o", "o", "o", "o", "o", "o", "s", "s", "s", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["o", "o", "o", "o", "o", "o", "o", "o", "s", "s", "s", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["o", "o", "o", "T", "o", "o", "o", "o", "s", "s", "s", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["T", "o", "o", "P", "U", "o", "o", "o", "s", "I", "U", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["T", "o", "o", "o", "Q", "U", "o", "o", "l", "Q", "Z", "o", "o", "I", "M", "U", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["P", "t", "U", "o", "Q", "E", "t", "o", "l", "T", "o", "o", "o", "Q", "E", "W", "o", "o", "o", "o", "o", "o", "o", "o", "e", "e", "e", "e", "e", "e", "e", "e", "e", "e", "e", "o", "o"],
+	["o", "o", "T", "o", "T", "o", "o", "o", "l", "P", "R", "t", "t", "Z", "o", "P", "t", "t", "R", "M", "R", "t", "U", "o", "e", "e", "e", "e", "e", "e", "e", "e", "e", "e", "e", "o", "o"],
+	["o", "o", "T", "o", "T", "o", "o", "o", "l", "o", "T", "o", "o", "o", "o", "o", "o", "o", "P", "E", "Z", "o", "T", "o", "e", "e", "e", "e", "e", "e", "e", "e", "e", "e", "e", "o", "o"],
+	["o", "o", "T", "o", "P", "U", "o", "o", "l", "o", "T", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "B", "o", "e", "e", "e", "e", "e", "e", "e", "e", "e", "e", "e", "o", "o"],
+	["o", "o", "B", "o", "o", "T", "o", "o", "l", "o", "P", "U", "o", "o", "o", "o", "w", "o", "w", "R", "t", "t", "E", "t", "e", "e", "e", "e", "e", "e", "e", "e", "e", "e", "e", "o", "o"],
+	["b", "U", "T", "o", "o", "o", "o", "o", "o", "o", "o", "T", "o", "o", "o", "o", "T", "o", "q", "e", "o", "o", "o", "o", "e", "e", "e", "e", "e", "e", "e", "e", "e", "e", "e", "o", "o"],
+	["o", "T", "T", "o", "o", "o", "o", "o", "o", "o", "o", "Q", "t", "U", "o", "o", "T", "o", "o", "T", "o", "o", "o", "o", "e", "e", "e", "e", "e", "e", "e", "e", "e", "e", "e", "o", "o"],
+	["o", "P", "A", "t", "t", "t", "t", "U", "o", "o", "I", "Z", "o", "P", "t", "t", "A", "q", "o", "T", "o", "o", "o", "o", "e", "e", "e", "e", "e", "e", "e", "e", "e", "e", "e", "o", "o"],
+	["o", "o", "T", "o", "o", "o", "o", "T", "o", "o", "T", "o", "o", "o", "o", "o", "T", "o", "e", "W", "o", "o", "o", "o", "e", "e", "e", "e", "e", "e", "e", "e", "e", "e", "e", "o", "o"],
+	["o", "o", "T", "o", "o", "o", "o", "P", "t", "t", "W", "o", "o", "o", "o", "I", "Z", "o", "o", "T", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["o", "o", "T", "o", "o", "o", "o", "o", "o", "o", "P", "U", "o", "o", "o", "T", "o", "I", "t", "Z", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["o", "o", "B", "o", "o", "o", "o", "o", "o", "o", "o", "B", "o", "o", "o", "T", "o", "T", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["o", "I", "Z", "o", "o", "o", "o", "o", "o", "o", "o", "T", "o", "o", "o", "T", "o", "T", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["o", "T", "o", "o", "o", "o", "o", "o", "o", "o", "I", "Z", "o", "o", "o", "P", "t", "A", "t", "t", "q", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["o", "P", "U", "o", "o", "o", "o", "o", "o", "o", "T", "o", "o", "o", "o", "o", "o", "w", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
+	["o", "o", "T", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o"] 
+],
+"zero_point": [-0.25, 2],
+"player_main_weapon": "Lasgun",
+"player_secondary_weapon": "Boltpistol",
+"player_grenade_type": "FragmentationGrenade",
+"player_melee_weapon": "Bayonet",
+"checkpoints": {
+	"checkpoint_1": [9, 1],
+	"checkpoint_2": [9, 19],
+	"checkpoint_3": [10, 19],
+	"checkpoint_4": [24, 25]
+},
+"allies": [
+	{
+		"self_type": "Commissar",
+		"main_weapon": "Weapon",
+		"second_weapon": "Boltpistol",
+        "melee_weapon": "Bayonet",
+		"grenade_type": "FragmentationGrenade",
+		"ai_type": "figurant",
+		"position": [10, 1],
+        "start_angle": 0
+	}
+],
+"enemies": [
+    {
+        "self_type": "BloodPackSoldier",
+        "main_weapon": "Lasgun",
+        "second_weapon": "Boltpistol",
+        "melee_weapon": "Bayonet",
+        "grenade_type": "FragmentationGrenade",
+        "ai_type": "turret",
+        "position": [10, 22],
+        "start_angle": 0
+	},
+    {
+        "self_type": "BloodPackSoldier",
+        "main_weapon": "Lasgun",
+        "second_weapon": "Boltpistol",
+        "melee_weapon": "Bayonet",
+        "grenade_type": "FragmentationGrenade",
+        "ai_type": "turret",
+        "position": [11, 22],
+        "start_angle": 0
+	},
+    {
+        "self_type": "BloodPackSoldier",
+        "main_weapon": "Lasgun",
+        "second_weapon": "Boltpistol",
+        "melee_weapon": "Bayonet",
+        "grenade_type": "FragmentationGrenade",
+        "ai_type": "turret",
+        "position": [13, 20],
+        "start_angle": 0
+    },
+    {
+        "self_type": "BloodPackSoldier",
+        "main_weapon": "Lasgun",
+        "second_weapon": "Boltpistol",
+        "melee_weapon": "Bayonet",
+        "grenade_type": "FragmentationGrenade",
+        "ai_type": "turret",
+        "position": [14, 20],
+        "start_angle": 0
+    },
+    {
+        "self_type": "BloodPackSoldier",
+        "main_weapon": "Lasgun",
+        "second_weapon": "Boltpistol",
+        "melee_weapon": "Bayonet",
+        "grenade_type": "FragmentationGrenade",
+        "ai_type": "turret",
+        "position": [15, 20],
+        "start_angle": 0
+    },
+    {
+        "self_type": "BloodPackSoldier",
+        "main_weapon": "Lasgun",
+        "second_weapon": "Boltpistol",
+        "melee_weapon": "Bayonet",
+        "grenade_type": "FragmentationGrenade",
+        "ai_type": "turret",
+        "position": [22, 22],
+        "start_angle": 0
+    },
+    {
+        "self_type": "BloodPackSoldier",
+        "main_weapon": "Lasgun",
+        "second_weapon": "Boltpistol",
+        "melee_weapon": "Bayonet",
+        "grenade_type": "FragmentationGrenade",
+        "ai_type": "turret",
+        "position": [21, 22],
+        "start_angle": 0
+    },
+    {
+        "self_type": "BloodPackSoldier",
+        "main_weapon": "Lasgun",
+        "second_weapon": "Boltpistol",
+        "melee_weapon": "Bayonet",
+        "grenade_type": "FragmentationGrenade",
+        "ai_type": "turret",
+        "position": [11, 25],
+        "start_angle": 0
+    },
+    {
+        "self_type": "BloodPackSoldier",
+        "main_weapon": "Lasgun",
+        "second_weapon": "Boltpistol",
+        "melee_weapon": "Bayonet",
+        "grenade_type": "FragmentationGrenade",
+        "ai_type": "turret",
+        "position": [13, 27],
+        "start_angle": 0
+    },
+    {
+        "self_type": "BloodPackSoldier",
+        "main_weapon": "Lasgun",
+        "second_weapon": "Boltpistol",
+        "melee_weapon": "Bayonet",
+        "grenade_type": "FragmentationGrenade",
+        "ai_type": "turret",
+        "position": [13, 28],
+        "start_angle": 0
+    },
+    {
+        "self_type": "BloodPackSoldier",
+        "main_weapon": "Lasgun",
+        "second_weapon": "Boltpistol",
+        "melee_weapon": "Bayonet",
+        "grenade_type": "FragmentationGrenade",
+        "ai_type": "turret",
+        "position": [15, 34],
+        "start_angle": 0
+    },
+    {
+        "self_type": "BloodPackSoldier",
+        "main_weapon": "Lasgun",
+        "second_weapon": "Boltpistol",
+        "melee_weapon": "Bayonet",
+        "grenade_type": "FragmentationGrenade",
+        "ai_type": "turret",
+        "position": [17, 34.5],
+        "start_angle": 45
+    },
+    {
+        "self_type": "BloodPackSoldier",
+        "main_weapon": "Lasgun",
+        "second_weapon": "Boltpistol",
+        "melee_weapon": "Bayonet",
+        "grenade_type": "FragmentationGrenade",
+        "ai_type": "turret",
+        "position": [19, 25],
+        "start_angle": 180
+    },
+    {
+        "self_type": "BloodPackSoldier",
+        "main_weapon": "Lasgun",
+        "second_weapon": "Boltpistol",
+        "melee_weapon": "Bayonet",
+        "grenade_type": "FragmentationGrenade",
+        "ai_type": "turret",
+        "position": [18, 25],
+        "start_angle": 10
+    },
+    {
+        "self_type": "BloodPackSoldier",
+        "main_weapon": "Lasgun",
+        "second_weapon": "Boltpistol",
+        "melee_weapon": "Bayonet",
+        "grenade_type": "FragmentationGrenade",
+        "ai_type": "turret_grenadier",
+        "position": [16, 25],
+        "start_angle": 10
+    },
+    {
+        "self_type": "BloodPackSoldier",
+        "main_weapon": "Plasmagun",
+        "second_weapon": "Boltpistol",
+        "melee_weapon": "Bayonet",
+        "grenade_type": "FragmentationGrenade",
+        "ai_type": "turret_grenadier",
+        "position": [18, 23],
+        "start_angle": 0
+    }
+],
+"enemies_tied_to_the_script": []}
