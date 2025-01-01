@@ -31,7 +31,7 @@ class Dialogue(py.sprite.Sprite):
 
 		self.my_font = py.font.SysFont('Comic Sans MS', 30)
 
-		self.speaker_name_surface = self.my_font.render(self.dialogue[self.line][1], False, config.COLOR_BLACK)
+		self.speaker__name__surface = self.my_font.render(self.dialogue[self.line][1], False, config.COLOR_BLACK)
 		self.text_surface = self.my_font.render(self.dialogue[self.line][0], False, config.COLOR_BLACK)
 		
 		init.dialogue = self
@@ -47,7 +47,7 @@ class Dialogue(py.sprite.Sprite):
 			config.moving["cut scene"] = False
 			self.kill()
 			return
-		self.speaker_name_surface = self.my_font.render(self.dialogue[self.line][1], False, config.COLOR_BLACK)
+		self.speaker__name__surface = self.my_font.render(self.dialogue[self.line][1], False, config.COLOR_BLACK)
 		self.text_surface = self.my_font.render(self.dialogue[self.line][0], False, config.COLOR_BLACK)
 
 	def last(self):
@@ -57,12 +57,12 @@ class Dialogue(py.sprite.Sprite):
 		self.line -= 1
 		if self.line >= len(self.dialogue) or self.line < 0:
 			return
-		self.speaker_name_surface = self.my_font.render(self.dialogue[self.line][1], False, config.COLOR_BLACK)
+		self.speaker__name__surface = self.my_font.render(self.dialogue[self.line][1], False, config.COLOR_BLACK)
 		self.text_surface = self.my_font.render(self.dialogue[self.line][0], False, config.COLOR_BLACK)
 	
 	def draw(self):
 		init.screen.blit(self.members_left, [0, config.window_size[1]-config.CELL_SIZE*3.5])
 		init.screen.blit(self.members_right, [config.window_size[0]-config.CELL_SIZE, config.window_size[1]-config.CELL_SIZE*3.5])
 		init.screen.blit(self.text_field, [0, config.window_size[1]-config.CELL_SIZE*1.5])
-		init.screen.blit(self.speaker_name_surface, [config.CELL_SIZE//2, config.window_size[1]-config.CELL_SIZE*1.3])
+		init.screen.blit(self.speaker__name__surface, [config.CELL_SIZE//2, config.window_size[1]-config.CELL_SIZE*1.3])
 		init.screen.blit(self.text_surface, [config.CELL_SIZE//2, config.window_size[1]-config.CELL_SIZE*1])

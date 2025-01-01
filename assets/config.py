@@ -12,6 +12,7 @@ zero_coordinate = [0, 0]
 SCATTER = CELL_SIZE//3
 last_time_update = 0
 is_console_open = False
+has_tracked_enemys = True
 
 CHARACTERs_TYPES = [
     "enemies",

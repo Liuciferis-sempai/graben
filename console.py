@@ -17,7 +17,7 @@ class Console:
 		self.console_background = py.Surface([config.window_size[0], config.CELL_SIZE])
 		self.console_background.fill(config.COLOR_GREY)
 	
-	def __processing_input(self):
+	def _processing_input(self):
 		'''
 		Обрабатывает ввод в консоль
 		'''
@@ -63,7 +63,7 @@ class Console:
 					else:
 						config.is_console_open = True
 				elif event.key == py.K_RETURN:
-					self.__processing_input()
+					self._processing_input()
 
 		buttons_group = None
 		if config.state_of_the_game["main menu"]:

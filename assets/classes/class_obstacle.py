@@ -51,3 +51,7 @@ class P_Mark(Obstacle):
 class M_Mark(Obstacle):
     def __init__(self, coords, position_on_map):
         super().__init__(coords, position_on_map, 39)
+
+class F_Mark(Obstacle):
+    def __init__(self, coords, position_on_map):
+        super().__init__(coords, position_on_map, 41)

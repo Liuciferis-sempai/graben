@@ -33,7 +33,7 @@ class Turret(AI):
 	def __init__(self, bot: py.sprite.Sprite):
 		super().__init__(bot)
 	
-	def __can_see(self):
+	def _can_see(self):
 		'''
 		Проверка на то, видит ли ии цель
 		'''
@@ -68,7 +68,7 @@ class Turret(AI):
 		'''
 		Обновление ИИ. делается каждый шаг
 		'''
-		if self.__can_see():
+		if self._can_see():
 			self.saw_target()
 			self.bot.shoot(init.player)
 
@@ -96,7 +96,7 @@ class TurretGrenadier(Turret):
 	'''
 	Статист гренадёр
 	'''
-	def __can_atack(self):
+	def _can_atack(self):
 		dx, dy = init.player.rect.centerx - self.bot.rect.centerx, init.player.rect.centery - self.bot.rect.centery
 		distance = math.sqrt(dx**2 + dy**2)
 
@@ -110,7 +110,7 @@ class TurretGrenadier(Turret):
 
 	def update(self):
 		super().update()
-		if self.__can_atack():
+		if self._can_atack():
 			if self.bot.active_weapon.has_second_shoot_mod:
 				self.saw_target()
 				self.bot.weapon_mode = 1

@@ -91,8 +91,8 @@ class ShowStatistics(Button):
 		init.save["statistics"]["time in game"] += py.time.get_ticks() - config.last_time_update
 		config.last_time_update = py.time.get_ticks()
 		init.scripts.save_save()
-		init.scripts.show_messeg_on_display(f"{init.languages[init.settings["language"]]["NUMBER_OF_DEATHS"]}: {init.save["statistics"]["number of deaths"]}", ["center", config.window_size[1]//2-config.CELL_SIZE], config.FONT_SIZE, config.COLOR_WHITE)
-		init.scripts.show_messeg_on_display(f"{init.languages[init.settings["language"]]["NUMBER_OF_KILLS"]}: {init.save["statistics"]["number of kills"]}", ["center", config.window_size[1]//2], config.FONT_SIZE, config.COLOR_WHITE)
+		init.scripts.show_message_on_display(f"{init.languages[init.settings["language"]]["NUMBER_OF_DEATHS"]}: {init.save["statistics"]["number of deaths"]}", ["center", config.window_size[1]//2-config.CELL_SIZE], config.FONT_SIZE, config.COLOR_WHITE)
+		init.scripts.show_message_on_display(f"{init.languages[init.settings["language"]]["NUMBER_OF_KILLS"]}: {init.save["statistics"]["number of kills"]}", ["center", config.window_size[1]//2], config.FONT_SIZE, config.COLOR_WHITE)
 		time = init.save["statistics"]["time in game"]
 		second = time // 1000
 		minute = 0
@@ -103,7 +103,7 @@ class ShowStatistics(Button):
 		while minute > 60:
 			minute -= 60
 			hour += 1
-		init.scripts.show_messeg_on_display(f"{init.languages[init.settings["language"]]["TIME_IN_GAME"]}: {hour} h {minute} m {second} s", ["center", config.window_size[1]//2+config.CELL_SIZE], config.FONT_SIZE, config.COLOR_WHITE)
+		init.scripts.show_message_on_display(f"{init.languages[init.settings["language"]]["TIME_IN_GAME"]}: {hour} h {minute} m {second} s", ["center", config.window_size[1]//2+config.CELL_SIZE], config.FONT_SIZE, config.COLOR_WHITE)
 
 class ExitGameButton(Button):
 	def __init__(self, position: tuple):
@@ -180,7 +180,7 @@ class BackToMainMenuFromSettingsButton(Button):
 				exit = True
 
 		if init.settings != init.old_settings and not exit:
-			init.scripts.show_messeg_on_display(init.languages[init.settings["language"]]["SETTINGS SAVE CONFIRM"], ["center", "center"], config.FONT_SIZE, config.COLOR_WHITE)
+			init.scripts.show_message_on_display(init.languages[init.settings["language"]]["SETTINGS SAVE CONFIRM"], ["center", "center"], config.FONT_SIZE, config.COLOR_WHITE, "SAVE CONFIRM")
 		else:
 			print("befor click: state_of_the_game[main menu]: ", config.state_of_the_game["main menu"], "/n", "state_of_the_game[settings]: ", config.state_of_the_game["settings"])
 			config.state_of_the_game["main menu"] = True
@@ -265,9 +265,7 @@ class TutorialButton(Button):
 		import assets.maps as maps
 		print("befor click: state_of_the_game[game mode selection]: ", config.state_of_the_game["game mode selection"], "/n", "state_of_the_game[game]: ", config.state_of_the_game["game"])
 		config.state_of_the_game["game mode selection"] = False
-		init.game_map = maps.TUTORIAL_MAP
-		init.board.map.map_translation()
-		init.scripts.tutorial()
+		init.scripts.load_tutorial()
 		config.state_of_the_game["game"] = True
 		print("after click: state_of_the_game[game mode selection]: ", config.state_of_the_game["game mode selection"], "/n", "state_of_the_game[game]: ", config.state_of_the_game["game"])
 
@@ -459,3 +457,4 @@ class MainMenuButton(Button):
 		config.state_of_the_game["main menu"] = True
 		config.state_of_the_game["menu"] = False
 		print("after click: state_of_the_game[main menu]: ", config.state_of_the_game["main menu"], "/n", "state_of_the_game[game]: ", config.state_of_the_game["game"])
+		init.texts = []

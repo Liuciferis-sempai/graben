@@ -50,6 +50,7 @@
 	"checkpoint_3": [10, 19],
 	"checkpoint_4": [24, 25]
 },
+"tracked_checkpoints": {},
 "allies": [
 	{
 		"self_type": "Commissar",

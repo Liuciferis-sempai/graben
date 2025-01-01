@@ -22,20 +22,114 @@ class Scripts:
 		}
 		self.maps = {}
 		self.boss = None
+		self.once = {}
 
 	def map_loader(self):
 		'''
 		Загружает карты из нужной папки
 		'''
 		self.maps = {}
-		files = [f for f in os.listdir("maps") if f.endswith(".json")]
+		files = [f for f in os.listdir("maps") if f.endswith("_map.json")]
 		for i, file_name in enumerate(files, start=1):
 			path = resource_path(os.path.join("maps", file_name))
 			with open(path, "r", encoding="utf-8") as file:
 				self.maps[i] = json.load(file)
 	
-	def tutorial(self):
-		pass
+	def player_action(self):
+		'''
+		Когда игрок хочет с чем то провзаимодействовать
+		'''
+		if init.board.group_for_action != []:
+			if hasattr(init.board.group_for_action[0], "type"):
+				if init.board.group_for_action[0].type in [17]:
+					init.player.main_weapon.ammo_in_pocket = init.player.main_weapon.ammo_in_pocket_max
+					init.player.main_weapon.ammo_in_weapon = init.player.main_weapon.ammo_in_weapon_max
+					init.player.second_weapon.ammo_in_pocket = init.player.second_weapon.ammo_in_pocket_max
+					init.player.second_weapon.ammo_in_weapon = init.player.second_weapon.ammo_in_weapon_max
+				elif init.board.group_for_action[0].type in [33]:
+					init.player.hp = config.PlAYER_MAX_HP
+			elif hasattr(init.board.group_for_action[0], "weapon"):
+				if init.board.group_for_action[0].weapon.name != init.player.active_weapon.name:
+					init.player.active_weapon = init.board.group_for_action[0].weapon
+			init.board.group_for_action.remove(init.board.group_for_action[0])
+	
+	def player_tracking(self):
+		'''
+		Отслеживает состояние игрока
+		'''
+		if init.game_map["map_name"] == "Tutorial":
+			for text in init.texts:
+				if text.content == "CELL ACTION EXPLANATION":
+					if init.player.main_weapon.ammo_in_pocket == init.player.main_weapon.ammo_in_pocket_max and self.once.get("ammo_tracking", True):
+						init.player.hp = 1
+						self.once["ammo_tracking"] = False
+						self.tutorial(9)
+			if init.player.hp == config.PlAYER_MAX_HP and self.once.get("hp_tracking", True) and not self.once.get("ammo_tracking", True):
+				self.once["hp_tracking"] = False
+				self.tutorial(10)
+	
+	def tied_to_the_script_handler(self):
+		'''
+		Отслеживает количество особых противников (в особой категории enemies_tied_to_the_script) и при определённом количестве, вызывает определённый скрипт
+		'''
+		for checkpoint in init.game_map["tracked_checkpoints"]:
+			if init.game_map["map_name"] == "Tutorial":
+				if init.game_map["tracked_checkpoints"][checkpoint] == len(init.enemies_tied_to_the_script):
+					if checkpoint == "tracked_checkpoint_1" and self.once.get("tracked_checkpoint_1", True):
+						self.once["tracked_checkpoint_1"] = False
+						self.tutorial(3)
+					elif checkpoint == "tracked_checkpoint_2" and self.once.get("tracked_checkpoint_2", True):
+						self.once["tracked_checkpoint_2"] = False
+						self.tutorial(5)
+					elif checkpoint == "tracked_checkpoint_3" and self.once.get("tracked_checkpoint_3", True):
+						self.once["tracked_checkpoint_3"] = False
+						self.tutorial(7)
+	
+	def tutorial(self, index: int):
+		'''
+		Выводит подсказки для обучения. Подсказка зависит от index
+		'''
+		if index == 0:
+			init.player.grenade_count = 0
+			init.player.main_weapon.ammo_in_weapon = 0
+			init.player.main_weapon.ammo_in_pocket = 0
+			self.show_message_on_display(init.languages[init.settings["language"]]["EXPLANATION_OF_MOVEMENT"], ["center", config.CELL_SIZE], config.FONT_SIZE, config.COLOR_BLACK, "MOVE EXPLANATION")
+		elif index == 1:
+			init.texts = []
+		elif index == 2:
+			init.player.main_weapon.ammo_in_weapon = 3
+			init.player.main_weapon.ammo_in_pocket = 20
+			self.show_message_on_display(init.languages[init.settings["language"]]["EXPLANATION_OF_SHOOTING"], ["center", config.CELL_SIZE], config.FONT_SIZE, config.COLOR_BLACK, "SHOOT EXPLANATION")
+		elif index == 3:
+			init.texts = []
+			init.game_map["map"][9][19] = "T"
+		elif index == 4:
+			init.player.grenade_type = FragmentationGrenade()
+			init.player.grenade_count = 3
+			self.show_message_on_display(init.languages[init.settings["language"]]["EXPLANATION_OF_GRENADE_THROWING"], ["center", config.CELL_SIZE], config.FONT_SIZE, config.COLOR_BLACK, "GRENADE EXPLANATION")
+		elif index == 5:
+			init.texts = []
+			init.player.grenade_count = 0
+			init.player.main_weapon.ammo_in_weapon = 0
+			init.player.main_weapon.ammo_in_pocket = 0
+			init.player.melee_weapon = Bayonet()
+			init.game_map["map"][13][21] = "t"
+		elif index == 6:
+			self.show_message_on_display(init.languages[init.settings["language"]]["EXPLANATION_OF_BAYONET"], ["center", config.CELL_SIZE], config.FONT_SIZE, config.COLOR_BLACK, "BAYONET EXPLANATION")
+		elif index == 7:
+			init.texts = []
+			init.game_map["map"][13][28] = "t"
+		elif index == 8:
+			self.show_message_on_display(init.languages[init.settings["language"]]["INTERACTION_WITH_CELLS"], ["center", config.CELL_SIZE], config.FONT_SIZE, config.COLOR_BLACK, "CELL ACTION EXPLANATION")
+		elif index == 9:
+			init.game_map["map"][11][32] = "T"
+			init.texts = []
+		elif index == 10:
+			init.game_map["map"][15][32] = "T"
+		elif index == 11:
+			config.state_of_the_game["game"] = False
+			config.state_of_the_game["level selection"] = True
+			self.reload()
 	
 	def checkpoint(self, position: list):
 		'''
@@ -50,6 +144,21 @@ class Scripts:
 						self.descent_into_the_trenches()
 					elif checkpoint == "checkpoint_4":
 						self.meet_world_eater()
+				if init.game_map["map_name"] == "Tutorial":
+					if checkpoint == "checkpoint_1":
+						self.tutorial(0)
+					elif checkpoint == "checkpoint_2":
+						self.tutorial(1)
+					elif checkpoint == "checkpoint_3":
+						self.tutorial(2)
+					elif checkpoint == "checkpoint_4":
+						self.tutorial(4)
+					elif checkpoint == "checkpoint_5":
+						self.tutorial(6)
+					elif checkpoint == "checkpoint_6":
+						self.tutorial(8)
+					elif checkpoint == "checkpoint_7":
+						self.tutorial(11)
 	
 	def commissioners_speech(self):
 		if not self.scripts_chekpoints["was_commissioners_speech"]:
@@ -64,7 +173,7 @@ class Scripts:
 			init.game_map["map"][18][9] = "o"
 			init.game_map["map"][18][10] = "o"
 			init.game_map["map"][19][7] = "o"
-			init.board.remove_character("all", "allie")
+			init.board.remove_character("all", "ally")
 	
 	def meet_world_eater(self):
 		if not self.scripts_chekpoints["was_meet_world_eater"]:
@@ -140,6 +249,18 @@ class Scripts:
 		with open("saves\save.json", "r", encoding="utf-8") as file:
 			init.save = json.load(file)
 	
+	def load_tutorial(self):
+		'''
+		Загружает обучающий уровень
+		'''
+		with open("maps\Tutorial.json", "r", encoding="utf-8") as file:
+			init.game_map = json.load(file)
+		config.zero_coordinate = [config.CELL_SIZE*init.game_map["zero_point"][0], config.CELL_SIZE*init.game_map["zero_point"][1]]
+		print(f"is loaded {init.game_map["map_name"]}")
+		init.board.map.map_translation()
+		self.load_allies()
+		self.load_enemies()
+	
 	def load_map(self, map_index: int):
 		'''
 		Загружает карту по индексу
@@ -152,11 +273,11 @@ class Scripts:
 		self.load_enemies()
 	
 	def load_allies(self):
-		for allie in init.game_map["allies"]:
-			allie_type = globals()[allie["self_type"]]
-			self_allie = allie_type(allie["main_weapon"], allie["second_weapon"], allie["melee_weapon"], allie["grenade_type"], allie["ai_type"], allie["position"], allie["start_angle"], allie.get("waypoints", None))
-			init.allies.add(self_allie)
-			init.board.add_character(self_allie, "allie")
+		for ally in init.game_map["allies"]:
+			ally_type = globals()[ally["self_type"]]
+			self_ally = ally_type(ally["main_weapon"], ally["second_weapon"], ally["melee_weapon"], ally["grenade_type"], ally["ai_type"], ally["position"], ally["start_angle"], ally.get("waypoints", None))
+			init.allies.add(self_ally)
+			init.board.add_character(self_ally, "ally")
 
 	def load_enemies(self):
 		for enemy in init.game_map["enemies"]:
@@ -168,7 +289,7 @@ class Scripts:
 		for enemy in init.game_map["enemies_tied_to_the_script"]:
 			enemy_type = globals()[enemy["self_type"]]
 			self_enemy = enemy_type(enemy["main_weapon"], enemy["second_weapon"], enemy["melee_weapon"], enemy["grenade_type"], enemy["ai_type"], enemy["position"], enemy["start_angle"], enemy.get("waypoints", None))
-			init.enemies.add(self_enemy)
+			init.enemies_tied_to_the_script.add(self_enemy)
 			init.board.add_character(self_enemy, "enemy")
 
 	def buttons_init(self):
@@ -219,14 +340,16 @@ class Scripts:
 		'''
 		for scripts_checkpoint in self.scripts_chekpoints:
 			self.scripts_chekpoints[scripts_checkpoint] = False
+		for moving in config.moving:
+			config.moving[moving] = False
 
-	def show_messeg_on_display(self, messeg: str, position: list, font: int, color: tuple):
+	def show_message_on_display(self, message: str, position: list, font: int, color: tuple, content: str):
 		'''
 		Отображает сообщение на экране
 		'''
-		messeg = Messege(messeg, position, font, color, "SAVE CONFIRM")
+		message = Message(message, position, font, color, content)
 		
-		init.texts.append(messeg)
+		init.texts.append(message)
 	
 	def move_group(self, group: py.sprite.Sprite, dx: int, dy: int):
 		"""
@@ -239,10 +362,10 @@ class Scripts:
 			sprite.center[0] += dx
 			sprite.center[1] += dy
 
-class Messege(py.sprite.Sprite):
-	def __init__(self, messeg: str, position: list, font: int, color: tuple, content: str):
+class Message(py.sprite.Sprite):
+	def __init__(self, message: str, position: list, font: int, color: tuple, content: str):
 		self.my_font = py.font.SysFont('Comic Sans MS', font)
-		self.text_surface = self.my_font.render(messeg, False, color)
+		self.text_surface = self.my_font.render(message, False, color)
 		self.content = content
 		if isinstance(position[0], int) and isinstance(position[1], int):
 			pass

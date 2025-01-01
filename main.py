@@ -27,7 +27,7 @@ def main_loop():
 			init.player.rect.center = init.player.start_position
 			init.board.map.map_translation()
 
-		#в зависимотсти от состояния игры, запскается новый цикл
+		#в зависимости от состояния игры, запускает новый цикл
 		if config.is_console_open:
 			init.console.opened()
 		else:
@@ -323,6 +323,9 @@ def game_loop(): #игровой цикл
 	init.enemies.update()
 	init.enemies.draw(init.screen)
 
+	init.enemies_tied_to_the_script.update()
+	init.enemies_tied_to_the_script.draw(init.screen)
+
 	init.allies.update()
 	init.allies.draw(init.screen)
 
@@ -350,13 +353,13 @@ def game_loop(): #игровой цикл
 					config.is_console_open = True
 
 			#отслеживание начала движения
-			check_movment(event, True)
+			check_movement(event, True)
 			
 			#активности игрока
 			if event.key == py.K_g:
 				init.player.grenade()
 			if event.key == py.K_e:
-				pass #интрактирование с предметом (поднятие оружия / пополнение боезапаса и тд)
+				init.scripts.player_action()
 			if event.key == py.K_r:
 				init.player.reload()
 			if event.key in [py.K_LSHIFT, py.K_RSHIFT]:
@@ -386,7 +389,7 @@ def game_loop(): #игровой цикл
 		elif event.type == py.KEYUP:
 			if event.type == py.KEYUP:
 				#отслеживание прекращения движения
-				check_movment(event, False)
+				check_movement(event, False)
 
 				#активности игрока
 				if event.key in [py.K_LSHIFT, py.K_RSHIFT]:
@@ -400,7 +403,11 @@ def game_loop(): #игровой цикл
 	
 	init.board.update_board()
 
-def check_movment(event: py.event, value: bool):
+	if config.has_tracked_enemys:
+		init.scripts.tied_to_the_script_handler()
+	init.scripts.player_tracking()
+
+def check_movement(event: py.event, value: bool):
 	'''
 	проверяет нажатие на кнопки движения и присваевает соответствующие value в случае истины в списке moving
 	@event ивент; event.key от pygame

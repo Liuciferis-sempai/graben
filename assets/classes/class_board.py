@@ -7,10 +7,11 @@ from assets.map_generator import *
 class Board:
 	def __init__(self):
 		self.map = Map()
-		self.__enemies_list = []
-		self.__allies_list = []
-		self.__item_list = []
-		self.__boss_group = []
+		self._enemies_list = []
+		self._allies_list = []
+		self._item_list = []
+		self._boss_group = []
+		self.group_for_action = []
 	
 	def zero_coordinate_update(self):
 		'''
@@ -35,6 +36,7 @@ class Board:
 		if config.moving["back"]:
 			dy -= speed
 		
+		self.group_for_action = []
 		dx, dy = init.player.check_collision(dx, dy)
 		
 		if dx == 0 and dy == 0:
@@ -50,17 +52,17 @@ class Board:
 		'''
 
 		if list_type == "enemy":
-			self.__enemies_list.append(character)
-		elif list_type == "allie":
-			self.__allies_list.append(character)
+			self._enemies_list.append(character)
+		elif list_type == "ally":
+			self._allies_list.append(character)
 		elif list_type == "boss":
-			self.__boss_group.append(character)
+			self._boss_group.append(character)
 	
 	def add_item(self, item: py.sprite.Sprite):
 		'''
 		Добавляет брошений предмет в список
 		'''
-		self.__item_list.append(item)
+		self._item_list.append(item)
 	
 	def remove_character(self, character: py.sprite.Sprite, list_type: str):
 		'''
@@ -69,25 +71,25 @@ class Board:
 
 		if character == "all":
 			if list_type == "enemy":
-				self.__enemies_list = []
-			elif list_type == "allie":
-				self.__allies_list = []
+				self._enemies_list = []
+			elif list_type == "ally":
+				self._allies_list = []
 			elif list_type == "boss":
-				self.__boss_group = []
+				self._boss_group = []
 		else:
 			if list_type == "enemy":
-				self.__enemies_list.remove(character)
-			elif list_type == "allie":
-				self.__allies_list.remove(character)
+				self._enemies_list.remove(character)
+			elif list_type == "ally":
+				self._allies_list.remove(character)
 			elif list_type == "boss":
-				self.__boss_group.remove(character)
+				self._boss_group.remove(character)
 
 	def update_board(self):
-		for boss in self.__boss_group:
+		for boss in self._boss_group:
 			boss.position_update()
 			boss.ai.update()
 			boss.animation_update()
-		for enemy in self.__enemies_list:
+		for enemy in self._enemies_list:
 			enemy.position_update()
 			if enemy.rect.centerx < config.window_size[0] and enemy.rect.centerx > 0:
 				if enemy.rect.centery < config.window_size[1] and enemy.rect.centery > 0:
@@ -95,11 +97,11 @@ class Board:
 						enemy.ai.update()
 					enemy.animation_update()
 		
-		for allie in self.__allies_list:
-			allie.position_update()
-			allie.ai.update()
-			#allie.animation_update()
-		for item in self.__item_list:
+		for ally in self._allies_list:
+			ally.position_update()
+			ally.ai.update()
+			#ally.animation_update()
+		for item in self._item_list:
 			item.update()
 		for anim_obstacle in init.animated_obstacle:
 			anim_obstacle.animation_update()

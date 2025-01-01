@@ -7,6 +7,7 @@ from assets.classes.class_obstacle import *
 import json
 import pygame_textinput
 import assets.sprits as sprits
+from assets.commands import *
 
 class EditorScreen:
 	def __init__(self):
@@ -25,11 +26,27 @@ class EditorScreen:
 			"player_grenade_type": "Weapon",
 			"player_melee_weapon": "Weapon",
 			"checkpoints": {},
+			"tracked_checkpoints": {},
 			"allies": [],
 			"enemies": [],
 			"enemies_tied_to_the_script": []
 		}
-		self.input_fields = []
+		self.data_default = {
+			"map_name": f"MAP_{self.max_map_index}",
+			"map": [],
+			"zero_point": [0, 0],
+			"player_main_weapon": "Weapon",
+			"player_secondary_weapon": "Weapon",
+			"player_grenade_type": "Weapon",
+			"player_melee_weapon": "Weapon",
+			"checkpoints": {},
+			"tracked_checkpoints": {},
+			"allies": [],
+			"enemies": [],
+			"enemies_tied_to_the_script": []
+		}
+		self.text_input = pygame_textinput.TextInputVisualizer(font_color=config.COLOR_RED)
+		self.answer = ""
 		self.camera_moving = {
 			"up": False,
 			"down": False,
@@ -41,6 +58,7 @@ class EditorScreen:
 		self.s_cell_list = []
 		self.c_cell_list = []
 		self.character_list = []
+		init.scripts.show_message_on_display("", [config.CELL_SIZE*3, config.CELL_SIZE*1.5], config.FONT_SIZE, config.COLOR_RED, "")
 	
 	def choise_map(self, map_num: int):
 		'''
@@ -53,7 +71,7 @@ class EditorScreen:
 		'''
 		Загружает карту по индексу
 		'''
-		with open(f"maps\map_{self.map_num}.json", "r", encoding="utf-8") as file:
+		with open(f"maps\{self.map_num}_map.json", "r", encoding="utf-8") as file:
 			self.data = json.load(file)
 		self.editing_start()
 
@@ -62,7 +80,7 @@ class EditorScreen:
 		Создаёт новую карту
 		'''
 		self.map_num = self.max_map_index
-		with open(f"maps\map_{self.max_map_index}.json", "w", encoding="utf-8") as file:
+		with open(f"maps\{self.max_map_index}_map.json", "w", encoding="utf-8") as file:
 			json.dump(self.data, file, ensure_ascii=True, indent=4)
 		self.editing_start()
 	
@@ -70,7 +88,7 @@ class EditorScreen:
 		'''
 		Сохроняет результат
 		'''
-		with open(f"maps/map_{self.map_num}.json", "w") as file:
+		with open(f"maps/{self.map_num}_map.json", "w") as file:
 			json.dump(self.data, file, ensure_ascii=True, indent=4)
 	
 	def close(self):
@@ -97,7 +115,7 @@ class EditorScreen:
 			MapChoiseButton([config.window_size[0]//2-config.CELL_SIZE, (i+1)*config.CELL_SIZE//4+i*config.CELL_SIZE], i+1)
 		CreateNewMap([config.window_size[0]//2-config.CELL_SIZE, (i+2)*config.CELL_SIZE//4+(i+1)*config.CELL_SIZE])
 	
-	def __create_buttons(self):
+	def _create_buttons(self):
 		'''
 		Создаёт кнопки основной локации
 		'''
@@ -109,8 +127,8 @@ class EditorScreen:
 		'''
 		init.buttons_editor = []
 		config.state_of_editor["main location"] = True
-		self.__create_buttons()
-		self.__characters_list_update()
+		self._create_buttons()
+		self._characters_list_update()
 	
 	def back_to_main_location(self):
 		'''
@@ -126,7 +144,7 @@ class EditorScreen:
 		}
 		self.input_fields = []
 		init.buttons_editor = []
-		self.__create_buttons()
+		self._create_buttons()
 	
 	def editing_map(self):
 		'''
@@ -136,11 +154,19 @@ class EditorScreen:
 		BackToMainLocation([config.CELL_SIZE//2, config.CELL_SIZE//2])
 		config.state_of_editor["main location"] = False
 		config.state_of_editor["editing a map"] = True
-
-		text_input = pygame_textinput.TextInputVisualizer(font_color=config.COLOR_RED)
-		self.input_fields.append(text_input)
 	
-	def __processing_input(self, field):
+	def _show_answer(self):
+		'''
+		Отображает ответ программы (например: консоли)
+		'''
+		try:
+			if self.answer != init.texts[0].content:
+				init.texts = []
+				init.scripts.show_message_on_display(self.answer, [config.CELL_SIZE*3, config.CELL_SIZE*0.5], config.FONT_SIZE, config.COLOR_RED, self.answer)
+		except:
+			pass
+	
+	def _processing_input(self, field):
 		'''
 		Обработка ввода
 		'''
@@ -153,7 +179,7 @@ class EditorScreen:
 				if "*" in request[1]:
 					request_1 = request[1].split("*")
 					self.data["map"] = []
-					self.__create_board_field([request_1[0], request_1[1]])
+					self._create_board_field([request_1[0], request_1[1]])
 			elif request[0] == "add": #обрабатывает приказ на добавление...
 				if request[1] == "to" and request[2] == "map": #... для карты ...
 					self.selected_cell = None
@@ -177,8 +203,8 @@ class EditorScreen:
 									enemy["position"][1] += 1
 								for point in self.data["checkpoints"]:
 									self.data["checkpoints"][point][1] += 1
-								self.__characters_list_update()
-							self.__add_row(add_invert)
+								self._characters_list_update()
+							self._add_row(add_invert)
 					elif request_1[0] == "col": #... стоба
 						for _ in range(request_1[1]):
 							if add_invert:
@@ -186,8 +212,8 @@ class EditorScreen:
 									enemy["position"][0] += 1
 								for point in self.data["checkpoints"]:
 									self.data["checkpoints"][point][0] += 1
-								self.__characters_list_update()
-							self.__add_column(add_invert)
+								self._characters_list_update()
+							self._add_column(add_invert)
 
 				elif request[1] in ["check", "point", "checkpoint"]: #... чекпоинт
 					checkpoint_count = len(self.data["checkpoints"])
@@ -195,7 +221,7 @@ class EditorScreen:
 						self.data["checkpoints"][f"checkpoint_{checkpoint_count+1}"] = [self.selected_cell.y, self.selected_cell.x]
 
 				elif request[1] == "chr": #...персонажа...
-					character_self = self.__character_translation(request[2])
+					character_self = self._character_translation(request[2])
 					if request[3] == "e":
 						request[3] = "enemies"
 					elif request[3] == "a":
@@ -213,23 +239,21 @@ class EditorScreen:
 								return
 						elif request[4] == "coords":
 							i = 2
-							character_position = [int(request[6]), int(request[7])]
+							character_position = [tr_int(request[6]), tr_int(request[7])]
+							if not (character_position[0] and character_position[1]):
+								return
 						if character_position != None:
-							character_angle = int(request[5+i])
+							character_angle = tr_int(self._get_request(request, 5+i, "0"))
 
-							character_main_weapon = request[6+i]
-							character_main_weapon = self.__weapon_translation(character_main_weapon)
+							character_main_weapon = self._weapon_translation(self._get_request(request, 6+1, "Lasgun"))
 
-							character_second_weapon = request[7+i]
-							character_second_weapon = self.__weapon_translation(character_second_weapon)
+							character_second_weapon = self._weapon_translation(self._get_request(request, 7+i, "Weapon"))
 
-							character_melee_weapon = request[8+i]
-							character_melee_weapon = self.__weapon_translation(character_melee_weapon)
+							character_melee_weapon = self._weapon_translation(self._get_request(request, 8+i, "Weapon"))
 
-							character_grenade_type = request[9+i]
-							character_grenade_type = self.__weapon_translation(character_grenade_type)
+							character_grenade_type = self._weapon_translation(self._get_request(request, 9+i, "Weapon"))
 
-							character_ai_type = request[10+i]
+							character_ai_type = self._get_request(request, 10+i, "no_ai")
 
 							self.data[character_type].append({
 								"self_type": character_self,
@@ -241,7 +265,7 @@ class EditorScreen:
 								"position": character_position,
 								"start_angle": character_angle
 							})
-							self.__characters_list_update()
+							self._characters_list_update()
 			elif request[0] == "remove": #обрабатывает приказ на убирание
 				if request[1] == "chr": #... персонажа
 					character_position = None
@@ -255,12 +279,17 @@ class EditorScreen:
 						for enemy in self.data["enemies"]:
 							if enemy["position"] == character_position:
 								self.data["enemies"].remove(enemy)
-								self.__characters_list_update()
+								self._characters_list_update()
 								break
-						for allie in self.data["allies"]:
+						for ally in self.data["allies"]:
 							if enemy["position"] == character_position:
-								self.data["allie"].remove(allie)
-								self.__characters_list_update()
+								self.data["ally"].remove(ally)
+								self._characters_list_update()
+								break
+						for enemy in self.data["enemies_tied_to_the_script"]:
+							if enemy["position"] == character_position:
+								self.data["enemies_tied_to_the_script"].remove(enemy)
+								self._characters_list_update()
 								break
 				elif request[1] in ["point", "check", "checkpoint"]: #... контрольной точки
 					if request[2] == "cell":
@@ -277,7 +306,7 @@ class EditorScreen:
 
 			elif request[0] == "rp": #обрабатывает замену ячейки
 				if self.selected_cell != None: #через выбору ячейки по клику
-					self.data["map"][self.selected_cell.x][self.selected_cell.y] = self.__cell_letter_translation(" ".join(request[1:]))
+					self.data["map"][self.selected_cell.x][self.selected_cell.y] = self._cell_letter_translation(" ".join(request[1:]))
 				elif request[1] == "c": #через координаты
 					self.data["map"][int(request[2])][int(request[3])] = request[4]
 			elif request[0] == "reset": #обнуление ...
@@ -292,9 +321,14 @@ class EditorScreen:
 							self.data["enemies"] = []
 						elif request[2] in ["a", "allies"]:
 							self.data["allies"] = []
+						elif request[2] in ["t"]:
+							self.data["enemies_tied_to_the_script"] = []
 					except IndexError:
 						self.data["enemies"] = []
 						self.data["allies"] = []
+						self.data["enemies_tied_to_the_script"] = []
+				elif request[1] == "all":
+					self.data = self.data_default.copy()
 			elif request[0] == "fix": #сохранение...
 				if request[1] == "map":#... проекта
 					self.save()
@@ -303,10 +337,30 @@ class EditorScreen:
 			elif request[0] == "set": #задать...
 				if request[1] == "name": #... имя карты
 					self.data["map_name"] = request[2]
-		except IndexError:
-			pass
+			elif request[0] == "info": #показать информацию о...
+				request_1 = self._get_request(request, 1, "map")
+				if request_1 == "map": #... карты
+					self.answer = f"Map name: {self.data["map_name"]}; CHR count: {len(self.data["enemies"])+len(self.data["allies"])+len(self.data["enemies_tied_to_the_script"])}; Checkpoints count: {len(self.data["checkpoints"])}"
+				elif request_1 == "cell": #... выбранной клетки
+					if self.selected_cell != None:
+						self.answer = f"Cell: x {self.selected_cell.x} y {self.selected_cell.y}; Type: {self.selected_cell.type} / {next((key for key, value in sprits.OBSTACLE_MAP.items() if value == self.selected_cell.type), None)}"
+					else:
+						self.answer = "No selected cell"
+				elif request_1 == "chr": #... персонажа
+					if self.selected_cell != None:
+						for character in self.character_list:
+							if character.x == self.selected_cell.x and character.y == self.selected_cell.y:
+								self.answer = f"Position: x {character.x} y {character.y}; Type: {character.__class__.__name__}"
+								break
+						else:
+							self.answer = "No character in selected cell"
+					else:
+						self.answer = "No selected cell"
+		except Exception as e:
+			self.answer = str(e)
+			print(e)
 	
-	def __create_board_field(self, size: list):
+	def _create_board_field(self, size: list):
 		'''
 		Создаёт поле размером size[0] на size[1]
 		'''
@@ -315,7 +369,7 @@ class EditorScreen:
 			for _ in range(int(size[1])):
 				self.data["map"][x].append("o")
 	
-	def __add_row(self, add_invert: bool):
+	def _add_row(self, add_invert: bool):
 		'''
 		Добавляет строку
 		'''
@@ -330,7 +384,7 @@ class EditorScreen:
 			else:
 				self.data["map"][-1].append("o")
 	
-	def __add_column(self, add_invert: bool):
+	def _add_column(self, add_invert: bool):
 		'''
 		Добавляет столб
 		'''
@@ -340,7 +394,7 @@ class EditorScreen:
 			else:
 				self.data["map"][x].append("o")
 	
-	def __show_map(self):
+	def _show_map(self):
 		'''
 		Отрисовывает карту
 		'''
@@ -368,6 +422,9 @@ class EditorScreen:
 								s_cell = S_Mark(temp_coord, [x, y])
 								self.s_cell_list.append(s_cell)
 								init.markers.add(s_cell)
+							elif cell.type == 40:
+								f_cell = F_Mark(temp_coord, [x, y])
+								init.markers.add(f_cell)
 							for checkpoint in self.data["checkpoints"]:
 								if self.data["checkpoints"][checkpoint] == [y, x]:
 									c_cell = C_Mark(temp_coord, [x, y])
@@ -382,7 +439,7 @@ class EditorScreen:
 		p_cell = P_Mark([-self.data["zero_point"][0]*config.CELL_SIZE + config.zero_coordinate[0] + config.window_size[0]//2, -self.data["zero_point"][1]*config.CELL_SIZE + config.zero_coordinate[1] + config.window_size[1]//2], [0, 0])
 		init.markers.add(p_cell)
 	
-	def __characters_list_update(self):
+	def _characters_list_update(self):
 		'''
 		Обновляет список персонажей в глобальной группе спрайтов
 		'''
@@ -402,23 +459,23 @@ class EditorScreen:
 			self.character_list.append(self_enemy)
 
 		init.allies.empty()
-		for allie in self.data["allies"]:
-			allie_type = globals()[allie["self_type"]]
-			self_allie = allie_type(allie["main_weapon"], allie["second_weapon"], allie["melee_weapon"], allie["grenade_type"], allie["ai_type"], allie["position"], allie["start_angle"])
-			init.allies.add(self_allie)
-			self.character_list.append(self_allie)
+		for ally in self.data["allies"]:
+			ally_type = globals()[ally["self_type"]]
+			self_ally = ally_type(ally["main_weapon"], ally["second_weapon"], ally["melee_weapon"], ally["grenade_type"], ally["ai_type"], ally["position"], ally["start_angle"])
+			init.allies.add(self_ally)
+			self.character_list.append(self_ally)
 		
-	def __find_cell(self):
+	def _find_cell(self):
 		'''
 		Находит клетку на которую было сделанно нажатие
 		'''
-		mause_pos = py.mouse.get_pos()
+		mouse_pos = py.mouse.get_pos()
 		for cell in self.cell_list:
-			if cell.rect.collidepoint(mause_pos):
+			if cell.rect.collidepoint(mouse_pos):
 				self.selected_cell = cell
 				return
 	
-	def __cell_letter_translation(self, request: str):
+	def _cell_letter_translation(self, request: str):
 		'''
 		Переводит абстрактный запрос в используеммое для клетки обозначение
 		'''
@@ -427,7 +484,7 @@ class EditorScreen:
 				return translation[0]
 		return "o"
 
-	def __weapon_translation(self, weapon: str):
+	def _weapon_translation(self, weapon: str):
 		if weapon in ["Lasgun", "L", "1"]:
 			return "Lasgun"
 		elif weapon in ["Boltgun", "B", "B0", "2"]:
@@ -447,49 +504,62 @@ class EditorScreen:
 		else:
 			return "Weapon"
 	
-	def __character_translation(self, character: str):
-		if character in ["BloodPackSoldier", "bloodpacksoldier", "bsoldier", "b_soldier", "bloodsoldier", "BloodSoldier"]:
+	def _character_translation(self, character: str):
+		if character in ["BloodPackSoldier", "bloodpacksoldier", "bsoldier", "b_soldier", "bloodsoldier", "BloodSoldier", "bs"]:
 			return "BloodPackSoldier"
 	
+	def _get_request(self, request: list, index: int, default):
+		'''
+		Получает определённый элемент из запроса
+		'''
+		answer = None
+		try:
+			answer = request[index]
+		except IndexError:
+			answer = default
+		
+		return answer
+			
 	def update_editor(self, events):
 		if config.state_of_editor["editing a map"]:
-			self.__show_map()
+			self._show_map()
 			for character in self.character_list:
 				character.position_update()
-			for field in self.input_fields:
-				field.update(events)
-				init.screen.blit(field.surface, (config.CELL_SIZE*3, config.CELL_SIZE//2))
-				for event in events:
-					if event.type == py.KEYDOWN:
-						if event.key == py.K_RETURN:
-							self.__processing_input(field)
-						if event.key == py.K_UP:
-							self.camera_moving["up"] = True
-						if event.key == py.K_DOWN:
-							self.camera_moving["down"] = True
-						if event.key == py.K_RIGHT:
-							self.camera_moving["right"] = True
-						if event.key == py.K_LEFT:
-							self.camera_moving["left"] = True
-					if event.type == py.KEYUP:
-						if event.key == py.K_UP:
-							self.camera_moving["up"] = False
-						if event.key == py.K_DOWN:
-							self.camera_moving["down"] = False
-						if event.key == py.K_RIGHT:
-							self.camera_moving["right"] = False
-						if event.key == py.K_LEFT:
-							self.camera_moving["left"] = False
-					if event.type == py.MOUSEBUTTONDOWN:
-						if event.button == 1:
-							self.__find_cell()
+			
+			self.text_input.update(events)
+			init.screen.blit(self.text_input.surface, (config.CELL_SIZE*3, config.CELL_SIZE))
+			for event in events:
+				if event.type == py.KEYDOWN:
+					if event.key == py.K_RETURN:
+						self._processing_input(self.text_input)
+					self._show_answer()
+					if event.key == py.K_UP:
+						self.camera_moving["up"] = True
+					if event.key == py.K_DOWN:
+						self.camera_moving["down"] = True
+					if event.key == py.K_RIGHT:
+						self.camera_moving["right"] = True
+					if event.key == py.K_LEFT:
+						self.camera_moving["left"] = True
+				if event.type == py.KEYUP:
+					if event.key == py.K_UP:
+						self.camera_moving["up"] = False
+					if event.key == py.K_DOWN:
+						self.camera_moving["down"] = False
+					if event.key == py.K_RIGHT:
+						self.camera_moving["right"] = False
+					if event.key == py.K_LEFT:
+						self.camera_moving["left"] = False
+				if event.type == py.MOUSEBUTTONDOWN:
+					if event.button == 1:
+						self._find_cell()
 
-				if any(self.camera_moving):
-					if self.camera_moving["up"]:
-						config.zero_coordinate[1] += 15
-					if self.camera_moving["down"]:
-						config.zero_coordinate[1] -= 15
-					if self.camera_moving["right"]:
-						config.zero_coordinate[0] -= 15
-					if self.camera_moving["left"]:
-						config.zero_coordinate[0] += 15
+			if any(self.camera_moving):
+				if self.camera_moving["up"]:
+					config.zero_coordinate[1] += 15
+				if self.camera_moving["down"]:
+					config.zero_coordinate[1] -= 15
+				if self.camera_moving["right"]:
+					config.zero_coordinate[0] -= 15
+				if self.camera_moving["left"]:
+					config.zero_coordinate[0] += 15

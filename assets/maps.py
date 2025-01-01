@@ -69,7 +69,8 @@ MAPS = {
 "player_main_weapon": "Lasgun",
 "player_secondary_weapon": "Weapon",
 "player_grenade_type": "FragmentationGrenade",
-"player_melee_weapon": "Bayonet"
+"player_melee_weapon": "Bayonet",
+"tracked_checkpoints": [],
 }}
 
 TUTORIAL_MAP = {
@@ -99,5 +100,6 @@ TUTORIAL_MAP = {
 "player_main_weapon": "Lasgun",
 "player_secondary_weapon": "Weapon",
 "player_grenade_type": "FragmentationGrenade",
-"player_melee_weapon": "Bayonet"
+"player_melee_weapon": "Bayonet",
+"tracked_checkpoints": []
 }

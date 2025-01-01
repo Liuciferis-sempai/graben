@@ -43,6 +43,7 @@ BED_RIGHT = py.image.load(resource_path("assets\image\Terrein\Bed_right.png"))
 S = py.image.load(resource_path("assets\image\Terrein\s.png"))
 C = py.image.load(resource_path("assets\image\Terrein\c.png"))
 P = py.image.load(resource_path("assets\image\Terrein\p.png"))
+F = py.image.load(resource_path("assets\image\Terrein\F.png"))
 FRAME = py.image.load(resource_path("assets\image\Terrein\Frame.png"))
 
 TRANSLATION = [
@@ -81,7 +82,8 @@ TRANSLATION = [
     ["r", "bed down", "bed d"],
     ["z", "bed up", "bed u"],
     ["u", "bed left", "bed l"],
-    ["i", "bed right", "bed r"]
+    ["i", "bed right", "bed r"],
+    ["F", "dirt 2"]
 ]
 
 OBSTACLE_MAP = {
@@ -124,7 +126,9 @@ OBSTACLE_MAP = {
     "D": 36,
     "f": 37,
     38: 38,
-    39: 39
+    39: 39,
+    "F": 40,
+    41: 41
 }
 IMAGE_MAP = {
 	0: py.transform.scale(DIRT, (config.CELL_SIZE, config.CELL_SIZE)),
@@ -166,7 +170,9 @@ IMAGE_MAP = {
     36: py.transform.scale(T_MORTAL_LEFT, (config.CELL_SIZE, config.CELL_SIZE)),
     37: py.transform.scale(T_MORTAL_RIGHT, (config.CELL_SIZE, config.CELL_SIZE)),
     38: py.transform.scale(P, (config.CELL_SIZE//2, config.CELL_SIZE//2)),
-    39: py.transform.scale(FRAME, (config.CELL_SIZE, config.CELL_SIZE))
+    39: py.transform.scale(FRAME, (config.CELL_SIZE, config.CELL_SIZE)),
+    40: py.transform.scale(DIRT, (config.CELL_SIZE, config.CELL_SIZE)),
+    41: py.transform.scale(F, (config.CELL_SIZE, config.CELL_SIZE)),
 }
 
 CHARACTERS = {

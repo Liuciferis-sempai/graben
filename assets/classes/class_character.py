@@ -53,7 +53,7 @@ class Entity(py.sprite.Sprite):
 	def load_animations(self):
 		pass
 	
-	def __has_no_obstacles(self, enemy: object):
+	def _has_no_obstacles(self, enemy: object):
 		'''
 		Проверяет, нет ли препятствий на пути к объекту
 		'''
@@ -123,16 +123,13 @@ class Entity(py.sprite.Sprite):
 			self.last_animation_update_time = py.time.get_ticks()
 			if self.frame_index > len(self.animation[self.state])-1:
 				if self.state == "dead":
-					print("!!!")
 					if self.name == "walram":
 						init.scripts.game_over()
 					else:
-						print("!!!!")
 						init.board.remove_character(self, "enemy")
 						self.kill()
 						for enemy in init.enemies:
-							print("!!! !!")
-							if self.__has_no_obstacles(enemy):
+							if self._has_no_obstacles(enemy):
 								enemy.ai.triggered(self)
 					return
 				self.frame_index = 0
@@ -154,7 +151,7 @@ class Entity(py.sprite.Sprite):
 
 		for obj in init.obstacles: #проверка на взаимодействие с картой
 			if temp_sprite.rect.colliderect(obj.rect):
-				if obj.type in [0, 20, 14, 12, 22, 23, 25]: #проверка на столкновение с препятствиями
+				if obj.type in [0, 20, 14, 12, 22, 23, 25, 40, 18]: #проверка на столкновение с препятствиями
 					if self.rect.right > obj.rect.left and self.rect.left < obj.rect.left:
 						if dx < 0:
 							dx = -dx
@@ -167,21 +164,13 @@ class Entity(py.sprite.Sprite):
 								config.moving["left"] = False
 				elif obj.position in init.game_map["checkpoints"].values(): #проверка на контакт с тригерами скрипта
 					init.scripts.checkpoint(obj.position)
-				elif obj.type in [16, 17]: #проверка на контакт с боеприпасами
-					pass
-
-		#for obj in init.items: #проверка на взаимодействие с упавшим оружием
-		#	if temp_sprite.rect.colliderect(obj.rect):
-		#		if obj != self:
-		#			if hasattr(obj, "weapon"):
-		#				if obj.weapon.name != self.active_weapon.name and obj.weapon.name != self.second_weapon.name:
-		#					self.active_weapon = obj.weapon
-		#					self.grenade_count = obj.grenade_count
-		#					self.ammo_count_in_weapon = obj.ammo_count_in_weapon
-		#					self.ammo_count_in_pocket = obj.ammo_count_in_pocket
-		#					self.ammo_count_in_weapon_max = obj.ammo_count_in_weapon_max
-		#					self.ammo_count_in_pocket_max = obj.ammo_count_in_pocket_max
-		#					obj.kill()
+				elif obj.type in [17, 33]: #проверка на контакт с боеприпасами
+					init.board.group_for_action.append(obj)
+		
+		if self.name == "walram":
+			for obj in init.items: #проверка на взаимодействие с упавшим оружием
+				if temp_sprite.rect.colliderect(obj.rect):
+					init.board.group_for_action.append(obj)
 
 		new_rect = py.Rect(self.rect.left, self.rect.top + dy, self.rect.width, self.rect.height)
 		temp_sprite = py.sprite.Sprite()
@@ -189,7 +178,7 @@ class Entity(py.sprite.Sprite):
 
 		for obj in init.obstacles: #проверка на взаимодействие с картой
 			if temp_sprite.rect.colliderect(obj.rect):
-				if obj.type in [0, 20, 14, 12, 22, 23, 25]: #проверка на столкновение с препятствиями
+				if obj.type in [0, 20, 14, 12, 22, 23, 25, 40, 18]: #проверка на столкновение с препятствиями
 					dy = -dy
 					if self.rect.bottom > obj.rect.top and self.rect.top < obj.rect.top:
 						if dy < 0:
@@ -201,21 +190,13 @@ class Entity(py.sprite.Sprite):
 							dy = -dy
 							if self.name == "walram":
 								config.moving["forward"] = False
-				elif obj.type in [16, 17]: #проверка на контакт с боеприпасами
-					pass
+				elif obj.type in [17, 33]: #проверка на контакт с боеприпасами
+					init.board.group_for_action.append(obj)
 
-		#for obj in init.items: #проверка на взаимодействие с упавшим оружием
-		#	if temp_sprite.rect.colliderect(obj.rect):
-		#		if obj != self:
-		#			if hasattr(obj, "weapon"):
-		#				if obj.weapon.name != self.active_weapon.name and obj.weapon.name != self.second_weapon.name:
-		#					self.active_weapon = obj.weapon
-		#					self.grenade_count = obj.grenade_count
-		#					self.ammo_count_in_weapon = obj.ammo_count_in_weapon
-		#					self.ammo_count_in_pocket = obj.ammo_count_in_pocket
-		#					self.ammo_count_in_weapon_max = obj.ammo_count_in_weapon_max
-		#					self.ammo_count_in_pocket_max = obj.ammo_count_in_pocket_max
-		#					obj.kill()
+		if self.name == "walram":
+			for obj in init.items: #проверка на взаимодействие с упавшим оружием
+				if temp_sprite.rect.colliderect(obj.rect):
+					init.board.group_for_action.append(obj)
 
 		return dx, dy
 	
@@ -254,15 +235,18 @@ class Entity(py.sprite.Sprite):
 		'''
 		Производит атаку оружием ближнего боя
 		'''
-		if py.time.get_ticks() - self.last_melee_atack_time > self.melee_weapon.cooldown:
-			self.last_melee_atack_time = py.time.get_ticks()
+		try:
+			if py.time.get_ticks() - self.last_melee_atack_time > self.melee_weapon.cooldown:
+				self.last_melee_atack_time = py.time.get_ticks()
 
-			if target == None:
-				target = py.mouse.get_pos()
-			else:
-				target = target.rect.center
+				if target == None:
+					target = py.mouse.get_pos()
+				else:
+					target = target.rect.center
 
-			self.melee_weapon.shoot(self.point_of_shoot(), target, True, self)
+				self.melee_weapon.shoot(self.point_of_shoot(), target, True, self)
+		except:
+			pass
 
 	def reload(self):
 		'''
@@ -384,7 +368,7 @@ class Walram(Entity):
 		self.grenade_count = 3
 		self.active_weapon = self.main_weapon
 
-		self.main_weapon.ammo_in_weapon = self.main_weapon.ammo_in_weapon_max
+		self.second_weapon.ammo_in_pocket = self.second_weapon.ammo_in_pocket_max
 		self.second_weapon.ammo_in_weapon = self.second_weapon.ammo_in_weapon_max
 
 class Commissar(Entity):

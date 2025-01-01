@@ -122,7 +122,7 @@ class Bullet(py.sprite.Sprite):
 		
 		if not self.explosion_on_target:
 			collided_obstacles = py.sprite.spritecollide(self, init.obstacles, False)
-			collided_enemy = py.sprite.spritecollide(self, init.enemies, False)
+			collided_enemy = py.sprite.spritecollide(self, init.enemies, False) + py.sprite.spritecollide(self, init.enemies_tied_to_the_script, False)
 			collided_player = py.sprite.spritecollide(self, init.player_group, False)
 			collided_allies = py.sprite.spritecollide(self, init.allies, False)
 
@@ -163,7 +163,7 @@ class Bullet(py.sprite.Sprite):
 
 		self.explosion = False
 
-		collided_enemy = py.sprite.spritecollide(explosion, init.enemies, False)
+		collided_enemy = py.sprite.spritecollide(explosion, init.enemies, False) + py.sprite.spritecollide(self, init.enemies_tied_to_the_script, False)
 		collided_player = py.sprite.spritecollide(explosion, init.player_group, False)
 
 		for hitted in collided_enemy:
