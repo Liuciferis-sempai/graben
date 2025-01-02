@@ -57,7 +57,7 @@ class Entity(py.sprite.Sprite):
 		'''
 		Проверяет, нет ли препятствий на пути к объекту
 		'''
-		for obstacle in init.obstacles:
+		for obstacle in init.chr_collision_and_bullet_collision:
 			if obstacle.type in [0, 20, 14, 12]:
 				if obstacle.rect.clipline(self.rect.center, enemy.rect.center):
 					return False
@@ -149,23 +149,36 @@ class Entity(py.sprite.Sprite):
 		temp_sprite = py.sprite.Sprite()
 		temp_sprite.rect = new_rect
 
-		for obj in init.obstacles: #проверка на взаимодействие с картой
+		for obj in init.chr_collision: #проверка на взаимодействие с картой
 			if temp_sprite.rect.colliderect(obj.rect):
-				if obj.type in [0, 20, 14, 12, 22, 23, 25, 40, 18]: #проверка на столкновение с препятствиями
-					if self.rect.right > obj.rect.left and self.rect.left < obj.rect.left:
-						if dx < 0:
-							dx = -dx
-							if self.name == "walram":
-								config.moving["right"] = False
-					elif self.rect.left < obj.rect.right and self.rect.right > obj.rect.right:
-						if dx > 0:
-							dx = -dx
-							if self.name == "walram":
-								config.moving["left"] = False
-				elif obj.position in init.game_map["checkpoints"].values(): #проверка на контакт с тригерами скрипта
-					init.scripts.checkpoint(obj.position)
-				elif obj.type in [17, 33]: #проверка на контакт с боеприпасами
-					init.board.group_for_action.append(obj)
+				if self.rect.right > obj.rect.left and self.rect.left < obj.rect.left:
+					if dx < 0:
+						dx = -dx
+						if self.name == "walram":
+							config.moving["right"] = False
+				elif self.rect.left < obj.rect.right and self.rect.right > obj.rect.right:
+					if dx > 0:
+						dx = -dx
+						if self.name == "walram":
+							config.moving["left"] = False
+		for obj in init.chr_collision_and_bullet_collision: #проверка на взаимодействие с картой
+			if temp_sprite.rect.colliderect(obj.rect):
+				if self.rect.right > obj.rect.left and self.rect.left < obj.rect.left:
+					if dx < 0:
+						dx = -dx
+						if self.name == "walram":
+							config.moving["right"] = False
+				elif self.rect.left < obj.rect.right and self.rect.right > obj.rect.right:
+					if dx > 0:
+						dx = -dx
+						if self.name == "walram":
+							config.moving["left"] = False
+		for obj in init.no_collision:
+			if temp_sprite.rect.colliderect(obj.rect):
+				if obj.coords in init.game_map["checkpoints"].values(): #проверка на контакт с тригерами скрипта
+					init.scripts.checkpoint(obj.coords)
+				if obj.type in ["Q", "e", "E", "r"]: #проверка на контакт с боеприпасами
+						init.board.group_for_action.append(obj)
 		
 		if self.name == "walram":
 			for obj in init.items: #проверка на взаимодействие с упавшим оружием
@@ -176,21 +189,35 @@ class Entity(py.sprite.Sprite):
 		temp_sprite = py.sprite.Sprite()
 		temp_sprite.rect = new_rect
 
-		for obj in init.obstacles: #проверка на взаимодействие с картой
+		for obj in init.chr_collision: #проверка на взаимодействие с картой
 			if temp_sprite.rect.colliderect(obj.rect):
-				if obj.type in [0, 20, 14, 12, 22, 23, 25, 40, 18]: #проверка на столкновение с препятствиями
-					dy = -dy
-					if self.rect.bottom > obj.rect.top and self.rect.top < obj.rect.top:
-						if dy < 0:
-							dy = -dy
-							if self.name == "walram":
-								config.moving["back"] = False
-					elif self.rect.top < obj.rect.bottom and self.rect.bottom > obj.rect.bottom:
-						if dy > 0:
-							dy = -dy
-							if self.name == "walram":
-								config.moving["forward"] = False
-				elif obj.type in [17, 33]: #проверка на контакт с боеприпасами
+				if self.rect.bottom > obj.rect.top and self.rect.top < obj.rect.top:
+					if dy < 0:
+						dy = -dy
+						if self.name == "walram":
+							config.moving["back"] = False
+				elif self.rect.top < obj.rect.bottom and self.rect.bottom > obj.rect.bottom:
+					if dy > 0:
+						dy = -dy
+						if self.name == "walram":
+							config.moving["forward"] = False
+		for obj in init.chr_collision_and_bullet_collision: #проверка на взаимодействие с картой
+			if temp_sprite.rect.colliderect(obj.rect):
+				if self.rect.bottom > obj.rect.top and self.rect.top < obj.rect.top:
+					if dy < 0:
+						dy = -dy
+						if self.name == "walram":
+							config.moving["back"] = False
+				elif self.rect.top < obj.rect.bottom and self.rect.bottom > obj.rect.bottom:
+					if dy > 0:
+						dy = -dy
+						if self.name == "walram":
+							config.moving["forward"] = False
+		for obj in init.no_collision:
+			if temp_sprite.rect.colliderect(obj.rect):
+				if obj.coords in init.game_map["checkpoints"].values(): #проверка на контакт с тригерами скрипта
+					init.scripts.checkpoint(obj.coords)
+				if obj.type in ["Q", "e", "E", "r"]: #проверка на контакт с боеприпасами
 					init.board.group_for_action.append(obj)
 
 		if self.name == "walram":
@@ -304,7 +331,7 @@ class Walram(Entity):
 		super().__init__()
 
 		self.name = "walram"
-		self.hp = config.PlAYER_MAX_HP
+		self.hp = init.game_map["player_start_hp"]
 		self.speed = config.PLAYER_SPEED
 
 		self.main_weapon = globals()[init.game_map["player_main_weapon"]]()
@@ -313,7 +340,8 @@ class Walram(Entity):
 		self.grenade_type = globals()[init.game_map["player_grenade_type"]]()
 		self.active_weapon = self.main_weapon
 
-		self.grenade_count = 3
+		self.grenade_count = self.grenade_type.ammo_in_pocket_max
+		self.grenade_count_max = self.grenade_type.ammo_in_pocket_max
 
 		self.load_animations()
 
@@ -352,7 +380,7 @@ class Walram(Entity):
 		Перезапуск персонажа
 		'''
 		self.dead = False
-		self.hp = config.PlAYER_MAX_HP
+		self.hp = init.game_map["player_start_hp"]
 
 		self.main_weapon = globals()[init.game_map["player_main_weapon"]]()
 		self.second_weapon = globals()[init.game_map["player_secondary_weapon"]]()
@@ -490,7 +518,7 @@ class WorldEaater(Entity):
 	
 	def hit(self, bullet):
 		if bullet.name == "laser":
-			self.hp -= 1000
+			self.hp -= 30
 		elif bullet.name == "bolter":
 			self.hp -= 30
 		elif bullet.name == "bigbolter":

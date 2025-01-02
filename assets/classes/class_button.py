@@ -288,7 +288,7 @@ class MapEditorButton(Button):
 		print("after click: state_of_the_game[game mode selection]: ", config.state_of_the_game["game mode selection"], "/n", "state_of_the_game[editor]: ", config.state_of_the_game["editor"])
 
 #кнопки для редактора карт
-class MapChoiseButton(Button):
+class MapChoiceButton(Button):
 	def __init__(self, position: tuple, map_num: int):
 		'''
 		Создаёт кнопку для открытия выбранной карты
@@ -303,7 +303,7 @@ class MapChoiseButton(Button):
 		init.buttons_editor.append(self)
 	
 	def click(self):
-		init.editor.choise_map(self.map_num)
+		init.editor.choice_map(self.map_num)
 
 class CreateNewMap(Button):
 	def __init__(self, position: tuple):
@@ -333,6 +333,20 @@ class MapEdit(Button):
 
 	def click(self):
 		init.editor.editing_map()
+
+class MainCharacterEdit(Button):
+	def __init__(self, position: tuple):
+		'''
+		Открывает редактор главного персонажа
+		'''
+		self.text = init.languages[init.settings["language"]]["MAIN_CHARACTER_EDIT"]
+		self.contents = "MAIN_CHARACTER_EDIT"
+		super().__init__(position)
+
+		init.buttons_editor.append(self)
+
+	def click(self):
+		init.editor.editing_main_character()
 
 class BackToMainLocation(Button):
 	def __init__(self, position: tuple):
@@ -376,8 +390,8 @@ class LevelStartButton(Button):
 		config.state_of_the_game["level selection"] = False
 		init.loaded_map = self.level_num
 		init.scripts.load_map(self.level_num)
+		init.board.map.map_translation()
 		init.scripts.reload()
-		init.player.restart()
 		init.gui.load_ico()
 		config.state_of_the_game["game"] = True
 		print("after click: state_of_the_game[level selection]: ", config.state_of_the_game["main menu"], "/n", "state_of_the_game[game]: ", config.state_of_the_game["game"])
@@ -435,7 +449,6 @@ class RestartButton(Button):
 		print("befor click: state_of_the_game[menu]: ", config.state_of_the_game["menu"], "/n", "state_of_the_game[game]: ", config.state_of_the_game["game"])
 		config.state_of_the_game["menu"] = False
 		init.scripts.load_map(init.loaded_map)
-		init.player.restart()
 		init.scripts.reload()
 		config.state_of_the_game["game"] = True
 		print("after click: state_of_the_game[menu]: ", config.state_of_the_game["menu"], "/n", "state_of_the_game[game]: ", config.state_of_the_game["game"])

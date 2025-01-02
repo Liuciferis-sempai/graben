@@ -43,9 +43,9 @@ class Fire(py.sprite.Sprite):
 		if self.already_exists > config.FIRE_EXIST:
 			self.must_die()
 		else:
-			collided_obstacles = py.sprite.spritecollide(self, init.obstacles_group, False)
-			collided_enemy = py.sprite.spritecollide(self, init.enemies, False)
-			collided_player = py.sprite.spritecollide(self, init.player_list, False)
+			collided_obstacles = py.sprite.spritecollide(self, init.bullet_collision, False)  + py.sprite.spritecollide(self, init.chr_collision_and_bullet_collision, False)
+			collided_enemy = py.sprite.spritecollide(self, init.enemies, False) + py.sprite.spritecollide(self, init.enemies_tied_to_the_script, False)
+			collided_player = py.sprite.spritecollide(self, init.player_group, False)
 
 			for obstacle in collided_obstacles:
 				if obstacle.type in [0]:
@@ -121,20 +121,19 @@ class Bullet(py.sprite.Sprite):
 			self.distance_traveled += self.speed
 		
 		if not self.explosion_on_target:
-			collided_obstacles = py.sprite.spritecollide(self, init.obstacles, False)
+			collided_obstacles = py.sprite.spritecollide(self, init.bullet_collision, False) + py.sprite.spritecollide(self, init.chr_collision_and_bullet_collision, False)
 			collided_enemy = py.sprite.spritecollide(self, init.enemies, False) + py.sprite.spritecollide(self, init.enemies_tied_to_the_script, False)
 			collided_player = py.sprite.spritecollide(self, init.player_group, False)
 			collided_allies = py.sprite.spritecollide(self, init.allies, False)
 
 			for obstacle in collided_obstacles:
-				if obstacle.type in [0, 20]:
-					if self.is_behind_cover and obstacle.type == 0:
-						continue
-					else:
-						if self.explosion:
-							self.do_explosion()
-						self.kill()
-						break
+				if self.is_behind_cover:
+					continue
+				else:
+					if self.explosion:
+						self.do_explosion()
+					self.kill()
+					break
 			if self.creator in init.enemies:
 				for hitted in collided_player:
 					if self.creator != None:
@@ -163,7 +162,7 @@ class Bullet(py.sprite.Sprite):
 
 		self.explosion = False
 
-		collided_enemy = py.sprite.spritecollide(explosion, init.enemies, False) + py.sprite.spritecollide(self, init.enemies_tied_to_the_script, False)
+		collided_enemy = py.sprite.spritecollide(explosion, init.enemies, False) + py.sprite.spritecollide(explosion, init.enemies_tied_to_the_script, False)
 		collided_player = py.sprite.spritecollide(explosion, init.player_group, False)
 
 		for hitted in collided_enemy:
@@ -223,7 +222,7 @@ class Plasma_type2Bullet(Bullet):
 
 class GrenadeBullet(Bullet):
 	def __init__(self, start_pos, target_pos, max_distace, is_behind_cover, creator):
-		super().__init__(start_pos, target_pos, 18, max_distace, {"is_behind_cover": True, "explosion": True, "explosion_on_target": True}, creator, "grenade")
+		super().__init__(start_pos, target_pos, 18, max_distace, {"is_behind_cover": True, "explosion": True, "explosion_on_target": True}, creator, "fragmentation grenade")
 
 class invisibleLaserBullet(Bullet):
 	def __init__(self, start_pos, target_pos, max_distace, is_behind_cover, creator):

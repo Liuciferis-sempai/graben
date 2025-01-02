@@ -13,7 +13,10 @@ from assets.classes.class_weapon import *
 player_group = py.sprite.Group()
 enemies = py.sprite.Group()
 allies = py.sprite.Group()
-obstacles = py.sprite.Group()
+chr_collision = py.sprite.Group() #группа для проверки на колюзию у персонажей
+bullet_collision = py.sprite.Group() #группа для проверки на колюзию у пуль
+chr_collision_and_bullet_collision = py.sprite.Group() #группа для проверки на колюзию у персонажей и пуль
+no_collision =  py.sprite.Group() #все остальные
 bullets = py.sprite.Group()
 items = py.sprite.Group()
 markers = py.sprite.Group()

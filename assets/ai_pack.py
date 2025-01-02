@@ -43,10 +43,9 @@ class Turret(AI):
 		angle_diff = abs((angle_to_player + self.bot.angle + 180) % 360 - 180)
 		
 		if angle_diff <= self.bot.fov:
-			for obstacle in init.obstacles:
-				if obstacle.type in [0, 20, 14, 12]:
-					if obstacle.rect.clipline(self.bot.rect.center, init.player.rect.center):
-						return False
+			for obstacle in init.chr_collision_and_bullet_collision:
+				if obstacle.rect.clipline(self.bot.rect.center, init.player.rect.center):
+					return False
 			return True
 		else:
 			return False

@@ -8,6 +8,8 @@ FONT_SIZE = 30
 ANIMATION_COOLDOWN = 200
 BUNKER_COOLDOWN = [100, 200]
 
+timer = 0
+
 zero_coordinate = [0, 0]
 SCATTER = CELL_SIZE//3
 last_time_update = 0
@@ -34,10 +36,7 @@ state_of_the_game = {
 
 state_of_editor = {
     "main location": False,
-    "main weapon choise": False,
-    "second weapon choise": False,
-    "melee weapon choise": False,
-    "grenade choise": False,
+    "editing main character": False,
     "editing a map": False
 }
 

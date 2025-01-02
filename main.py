@@ -9,23 +9,15 @@ import assets.config as config
 import assets.sprits as sprits
 from assets.classes.class_button import *
 
+from datetime import datetime
+
 def main_loop():
+	config.timer = datetime.now()
 	clock = py.time.Clock()
 
 	while config.running:
 		#проверка на соответствие размеров дисплея
-		window_width, window_height = py.display.get_surface().get_size()
-		if window_width != config.window_size[0] or window_height != config.window_size[1]:
-			difference_width = config.window_size[0] - window_width
-			difference_height = config.window_size[1] - window_height
-			config.zero_coordinate[0] -= difference_width // 2
-			config.zero_coordinate[1] -= difference_height // 2
-
-			config.window_size = [window_width, window_height]
-			init.scripts.buttons_init()
-			init.player.start_position = [config.window_size[0]//2, config.window_size[1]//2]
-			init.player.rect.center = init.player.start_position
-			init.board.map.map_translation()
+		window_size_adaptation()
 
 		#в зависимости от состояния игры, запускает новый цикл
 		if config.is_console_open:
@@ -64,6 +56,20 @@ def main_loop():
 	init.scripts.save_settings()
 	init.save["statistics"]["time in game"] += py.time.get_ticks() - config.last_time_update
 	init.scripts.save_save()
+
+def window_size_adaptation(): #адаптирует игру под изменившиеся размеры экрана, если они менялись
+	window_width, window_height = py.display.get_surface().get_size()
+	if window_width != config.window_size[0] or window_height != config.window_size[1]:
+		difference_width = config.window_size[0] - window_width
+		difference_height = config.window_size[1] - window_height
+		config.zero_coordinate[0] -= difference_width // 2
+		config.zero_coordinate[1] -= difference_height // 2
+
+		config.window_size = [window_width, window_height]
+		init.scripts.buttons_init()
+		init.player.start_position = [config.window_size[0]//2, config.window_size[1]//2]
+		init.player.rect.center = init.player.start_position
+		init.board.map.blit_map()
 
 def main_menu_loop(): #цикл, когда игрок находиться в главном меню
 	init.screen.fill(config.COLOR_GREY)
@@ -154,8 +160,14 @@ def editor_loop(): #редактор карт
 
 	clicked = False
 
-	init.obstacles.update()
-	init.obstacles.draw(init.screen)
+	init.chr_collision.update()
+	init.chr_collision.draw(init.screen)
+	init.bullet_collision.update()
+	init.bullet_collision.draw(init.screen)
+	init.chr_collision_and_bullet_collision.update()
+	init.chr_collision_and_bullet_collision.draw(init.screen)
+	init.no_collision.update()
+	init.no_collision.draw(init.screen)
 
 	init.markers.update()
 	init.markers.draw(init.screen)
@@ -263,8 +275,14 @@ def menu_loop(): #цикл, когда игрок во время игры от�
 def dialogue_loop(): #цикл, когда идёт диалог
 	init.screen.fill(config.COLOR_DIRT)
 
-	init.obstacles.update()
-	init.obstacles.draw(init.screen)
+	init.chr_collision.update()
+	init.chr_collision.draw(init.screen)
+	init.bullet_collision.update()
+	init.bullet_collision.draw(init.screen)
+	init.chr_collision_and_bullet_collision.update()
+	init.chr_collision_and_bullet_collision.draw(init.screen)
+	init.no_collision.update()
+	init.no_collision.draw(init.screen)
 
 	init.player_group.update()
 	init.player_group.draw(init.screen)
@@ -311,8 +329,14 @@ def dialogue_loop(): #цикл, когда идёт диалог
 def game_loop(): #игровой цикл
 	init.screen.fill(config.COLOR_DIRT)
 
-	init.obstacles.update()
-	init.obstacles.draw(init.screen)
+	init.chr_collision.update()
+	init.chr_collision.draw(init.screen)
+	init.bullet_collision.update()
+	init.bullet_collision.draw(init.screen)
+	init.chr_collision_and_bullet_collision.update()
+	init.chr_collision_and_bullet_collision.draw(init.screen)
+	init.no_collision.update()
+	init.no_collision.draw(init.screen)
 
 	init.items.update()
 	init.items.draw(init.screen)

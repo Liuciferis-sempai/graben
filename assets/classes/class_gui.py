@@ -23,7 +23,7 @@ class GUI(py.sprite.Sprite):
 
 		self.plasma_mode = [ICONS["PLASMA_MODE_0"], ICONS["PLASMA_MODE_1"]]
 
-		self.grenade_ico = ICONS["GRENADE"]
+		self.grenade_ico = ICONS["FRAGMENTATION GRENADE"]
 
 		self.main_weapon_ico = ICONS[init.player.main_weapon.name.upper()]
 

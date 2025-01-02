@@ -44,7 +44,7 @@ class Board:
 		
 		config.zero_coordinate[0] += dx
 		config.zero_coordinate[1] += dy
-		self.map.map_translation()
+		self.map.blit_map()
 	
 	def add_character(self, character: py.sprite.Sprite, list_type: str):
 		'''

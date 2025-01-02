@@ -41,12 +41,13 @@ class Scripts:
 		'''
 		if init.board.group_for_action != []:
 			if hasattr(init.board.group_for_action[0], "type"):
-				if init.board.group_for_action[0].type in [17]:
+				if init.board.group_for_action[0].type in ["Q", "e"]:
 					init.player.main_weapon.ammo_in_pocket = init.player.main_weapon.ammo_in_pocket_max
 					init.player.main_weapon.ammo_in_weapon = init.player.main_weapon.ammo_in_weapon_max
 					init.player.second_weapon.ammo_in_pocket = init.player.second_weapon.ammo_in_pocket_max
 					init.player.second_weapon.ammo_in_weapon = init.player.second_weapon.ammo_in_weapon_max
-				elif init.board.group_for_action[0].type in [33]:
+					init.player.grenade_count = init.player.grenade_count_max
+				elif init.board.group_for_action[0].type in ["E", "r"]:
 					init.player.hp = config.PlAYER_MAX_HP
 			elif hasattr(init.board.group_for_action[0], "weapon"):
 				if init.board.group_for_action[0].weapon.name != init.player.active_weapon.name:
@@ -102,7 +103,8 @@ class Scripts:
 			self.show_message_on_display(init.languages[init.settings["language"]]["EXPLANATION_OF_SHOOTING"], ["center", config.CELL_SIZE], config.FONT_SIZE, config.COLOR_BLACK, "SHOOT EXPLANATION")
 		elif index == 3:
 			init.texts = []
-			init.game_map["map"][9][19] = "T"
+			init.game_map["map"][9][19] = "R_90_2"
+			init.board.map.map_translation()
 		elif index == 4:
 			init.player.grenade_type = FragmentationGrenade()
 			init.player.grenade_count = 3
@@ -113,19 +115,23 @@ class Scripts:
 			init.player.main_weapon.ammo_in_weapon = 0
 			init.player.main_weapon.ammo_in_pocket = 0
 			init.player.melee_weapon = Bayonet()
-			init.game_map["map"][13][21] = "t"
+			init.game_map["map"][13][21] = "R_0_2"
+			init.board.map.map_translation()
 		elif index == 6:
 			self.show_message_on_display(init.languages[init.settings["language"]]["EXPLANATION_OF_BAYONET"], ["center", config.CELL_SIZE], config.FONT_SIZE, config.COLOR_BLACK, "BAYONET EXPLANATION")
 		elif index == 7:
 			init.texts = []
-			init.game_map["map"][13][28] = "t"
+			init.game_map["map"][13][28] = "R_0_2"
+			init.board.map.map_translation()
 		elif index == 8:
 			self.show_message_on_display(init.languages[init.settings["language"]]["INTERACTION_WITH_CELLS"], ["center", config.CELL_SIZE], config.FONT_SIZE, config.COLOR_BLACK, "CELL ACTION EXPLANATION")
 		elif index == 9:
-			init.game_map["map"][11][32] = "T"
+			init.game_map["map"][11][32] = "R_90_2"
+			init.board.map.map_translation()
 			init.texts = []
 		elif index == 10:
-			init.game_map["map"][15][32] = "T"
+			init.game_map["map"][15][32] = "R_90_2"
+			init.board.map.map_translation()
 		elif index == 11:
 			config.state_of_the_game["game"] = False
 			config.state_of_the_game["level selection"] = True
@@ -164,8 +170,9 @@ class Scripts:
 		if not self.scripts_chekpoints["was_commissioners_speech"]:
 			Dialogue(init.languages[init.settings["language"]]["COMMISSARS_SPEECH"], [init.player, Commissar("Boltgun", "Boltpistol", "Bayonet", "FragmentationGrenade", "no_ai", [0, 0], None)])
 			self.scripts_chekpoints["was_commissioners_speech"] = True
-			init.game_map["map"][2][8] = "s"
-			init.game_map["map"][2][9] = "s"
+			init.game_map["map"][2][8] = "q_0_2"
+			init.game_map["map"][2][9] = "q_0_2"
+			init.board.map.map_translation()
 	
 	def descent_into_the_trenches(self):
 		if not self.scripts_chekpoints["was_descent_into_the_trenches"]:
@@ -212,6 +219,9 @@ class Scripts:
 		'''
 		config.state_of_the_game["game"] = False
 		init.items.empty()
+		init.bullets.empty()
+		init.enemies.empty()
+		init.allies.empty()
 		config.state_of_the_game["menu"] = True
 	
 	def save_settings(self):
@@ -258,8 +268,10 @@ class Scripts:
 		config.zero_coordinate = [config.CELL_SIZE*init.game_map["zero_point"][0], config.CELL_SIZE*init.game_map["zero_point"][1]]
 		print(f"is loaded {init.game_map["map_name"]}")
 		init.board.map.map_translation()
+		init.board.map.blit_map()
 		self.load_allies()
 		self.load_enemies()
+		init.player.restart()
 	
 	def load_map(self, map_index: int):
 		'''
@@ -268,10 +280,11 @@ class Scripts:
 		init.game_map = copy.deepcopy(self.maps[map_index])
 		config.zero_coordinate = [config.CELL_SIZE*init.game_map["zero_point"][0], config.CELL_SIZE*init.game_map["zero_point"][1]]
 		print(f"is loaded {init.game_map["map_name"]}")
-		init.board.map.map_translation()
+		init.board.map.blit_map()
 		self.load_allies()
 		self.load_enemies()
-	
+		init.player.restart()
+
 	def load_allies(self):
 		for ally in init.game_map["allies"]:
 			ally_type = globals()[ally["self_type"]]

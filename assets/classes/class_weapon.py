@@ -66,4 +66,4 @@ class Flamethrower(Weapon):
 
 class FragmentationGrenade(Weapon):
 	def __init__(self):
-		super().__init__("Grenade", "fragmentation grenade", True, 2000, config.CELL_SIZE*5)
+		super().__init__("Grenade", "fragmentation grenade", True, 2000, config.CELL_SIZE*5, 1, 3)

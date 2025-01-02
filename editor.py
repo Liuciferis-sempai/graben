@@ -8,16 +8,18 @@ import json
 import pygame_textinput
 import assets.sprits as sprits
 from assets.commands import *
+from datetime import datetime
 
 class EditorScreen:
 	def __init__(self):
 		init.scripts.map_loader()
 		for i in range(len(init.scripts.maps)):
-			MapChoiseButton([config.window_size[0]//2-config.CELL_SIZE, (i+1)*config.CELL_SIZE//4+i*config.CELL_SIZE], i+1)
+			MapChoiceButton([config.window_size[0]//2-config.CELL_SIZE, (i+1)*config.CELL_SIZE//4+i*config.CELL_SIZE], i+1)
 		CreateNewMap([config.window_size[0]//2-config.CELL_SIZE, (i+2)*config.CELL_SIZE//4+(i+1)*config.CELL_SIZE])
 		self.map_num = 0
 		self.max_map_index = (i+2)
 		self.data = {
+			"map_version": "0.2",
 			"map_name": f"MAP_{self.max_map_index}",
 			"map": [],
 			"zero_point": [0, 0],
@@ -32,6 +34,7 @@ class EditorScreen:
 			"enemies_tied_to_the_script": []
 		}
 		self.data_default = {
+			"map_version": "0.2",
 			"map_name": f"MAP_{self.max_map_index}",
 			"map": [],
 			"zero_point": [0, 0],
@@ -60,7 +63,7 @@ class EditorScreen:
 		self.character_list = []
 		init.scripts.show_message_on_display("", [config.CELL_SIZE*3, config.CELL_SIZE*1.5], config.FONT_SIZE, config.COLOR_RED, "")
 	
-	def choise_map(self, map_num: int):
+	def choice_map(self, map_num: int):
 		'''
 		Выбирает нужную карту
 		'''
@@ -71,8 +74,10 @@ class EditorScreen:
 		'''
 		Загружает карту по индексу
 		'''
+		print("open map")
 		with open(f"maps\{self.map_num}_map.json", "r", encoding="utf-8") as file:
 			self.data = json.load(file)
+			init.game_map = self.data
 		self.editing_start()
 
 	def create_new_map(self):
@@ -90,6 +95,7 @@ class EditorScreen:
 		'''
 		with open(f"maps/{self.map_num}_map.json", "w") as file:
 			json.dump(self.data, file, ensure_ascii=True, indent=4)
+			init.game_map = self.data
 	
 	def close(self):
 		'''
@@ -108,11 +114,13 @@ class EditorScreen:
 			"allies": [],
 			"enemies": [],
 		}
+		init.texts = []
 		init.buttons_editor = []
 		config.state_of_editor["main location"] = False
+		config.state_of_editor["editing main character"] = False
 		self.map_num = 0
 		for i in range(len(init.scripts.maps)):
-			MapChoiseButton([config.window_size[0]//2-config.CELL_SIZE, (i+1)*config.CELL_SIZE//4+i*config.CELL_SIZE], i+1)
+			MapChoiceButton([config.window_size[0]//2-config.CELL_SIZE, (i+1)*config.CELL_SIZE//4+i*config.CELL_SIZE], i+1)
 		CreateNewMap([config.window_size[0]//2-config.CELL_SIZE, (i+2)*config.CELL_SIZE//4+(i+1)*config.CELL_SIZE])
 	
 	def _create_buttons(self):
@@ -120,6 +128,7 @@ class EditorScreen:
 		Создаёт кнопки основной локации
 		'''
 		MapEdit([config.CELL_SIZE, config.CELL_SIZE//2])
+		MainCharacterEdit([config.CELL_SIZE, config.CELL_SIZE*2])
 	
 	def editing_start(self):
 		'''
@@ -136,10 +145,7 @@ class EditorScreen:
 		'''
 		config.state_of_editor = {
 			"main location": True,
-			"main weapon choise": False,
-			"second weapon choise": False,
-			"melee weapon choise": False,
-			"grenade choise": False,
+			"editing main character": False,
 			"editing a map": False
 		}
 		self.input_fields = []
@@ -154,6 +160,18 @@ class EditorScreen:
 		BackToMainLocation([config.CELL_SIZE//2, config.CELL_SIZE//2])
 		config.state_of_editor["main location"] = False
 		config.state_of_editor["editing a map"] = True
+		self._map_version_update()
+		self.__map_translation()
+		print("version", init.game_map["map_version"])
+	
+	def editing_main_character(self):
+		'''
+		Инициализирует работу над главным персонажем
+		'''
+		init.buttons_editor = []
+		BackToMainLocation([config.CELL_SIZE//2, config.CELL_SIZE//2])
+		config.state_of_editor["main location"] = False
+		config.state_of_editor["editing main character"] = True
 	
 	def _show_answer(self):
 		'''
@@ -166,7 +184,72 @@ class EditorScreen:
 		except:
 			pass
 	
-	def _processing_input(self, field):
+	def _map_version_update(self):
+		'''
+		Обновляет версию карты
+		'''
+		if self.data["map_version"] == "0.1":
+			self.data["map_version"] = "0.2"
+			for y, line in enumerate(self.data["map"]):
+				for x, cell in enumerate(line):
+					self.data["map"][y][x] = sprits.VERSION_TRANSLATION[cell]
+	
+	def _processing_input_main_character_editor(self, field):
+		'''
+		Обработка ввода
+		'''
+		request = field.value.split() #разделят цельную строку на составные части
+		print(request)
+		field.value = "" #обнуление строки
+
+		try:
+			if request[0] == "set": #задать ...
+				if request[2] == "weapon": #... оружие типа ...
+					if request[1] in ["main", "m"]: #... главное ...
+						weapon = self._weapon_translation(request[3])
+						self.data["player_main_weapon"] = weapon
+					elif request[1] in ["secondary", "s"]: #... вторичное ...
+						weapon = self._weapon_translation(request[3])
+						self.data["player_secondary_weapon"] = weapon
+					elif request[1] in ["melee", "m"]: #... ближне бойное ...
+						weapon = self._weapon_translation(request[3])
+						self.data["player_melee_weapon"] = weapon
+
+				elif request[1] == "hp": #... здоровье ...
+					self.data["player_hp"] = tr_int(request[2], 3)
+
+				elif request[1] in ["grenade", "g"]: #... гранату ...
+					if request[2] in ["type", "t"]: #... тип ...
+						grenade = self._weapon_translation(request[3])
+						self.data["player_grenade_type"] = grenade
+					elif request[2] in ["count", "c"]: #... количество ...
+						self.data["player_grenade_count"] = tr_int(request[3], 3)
+
+		except Exception as e:
+			self.answer = str(e)
+			print(e)
+
+	def _show_player(self):
+		'''
+		Отображает главного персонажа
+		'''
+		init.player.main_weapon = globals()[self.data["player_main_weapon"]]()
+		init.player.second_weapon = globals()[self.data["player_secondary_weapon"]]()
+		init.player.grenade_type = globals()[self.data["player_grenade_type"]]()
+		init.player.melee_weapon = globals()[self.data["player_melee_weapon"]]()
+
+		main_weapon_ico = sprits.ICONS[init.player.main_weapon.name.upper()]
+		secondary_weapon_ico = sprits.ICONS[init.player.second_weapon.name.upper()]
+		melee_weapon_ico = sprits.ICONS[init.player.melee_weapon.name.upper()]
+
+		init.screen.blit(main_weapon_ico, [window_size[0]-config.CELL_SIZE*3, 0])
+		init.screen.blit(secondary_weapon_ico, [window_size[0]-config.CELL_SIZE*3, config.CELL_SIZE])
+		init.screen.blit(melee_weapon_ico, [window_size[0]-config.CELL_SIZE*3, config.CELL_SIZE*2])
+
+		init.player_group.update()
+		init.player_group.draw(init.screen)
+	
+	def _processing_input_map_editor(self, field):
 		'''
 		Обработка ввода
 		'''
@@ -305,10 +388,14 @@ class EditorScreen:
 								break
 
 			elif request[0] == "rp": #обрабатывает замену ячейки
+				print(self.selected_cell, self.selected_cell != None)
 				if self.selected_cell != None: #через выбору ячейки по клику
-					self.data["map"][self.selected_cell.x][self.selected_cell.y] = self._cell_letter_translation(" ".join(request[1:]))
+					self.data["map"][self.selected_cell.x][self.selected_cell.y] = self._cell_letter_translation(" ".join(request[2:]))
 				elif request[1] == "c": #через координаты
-					self.data["map"][int(request[2])][int(request[3])] = request[4]
+					self.data["map"][int(request[2])][int(request[3])] = self._cell_letter_translation(" ".join(request[4:]))
+				self.__map_translation()
+			elif request[0] == "rg":
+				self.__map_translation()
 			elif request[0] == "reset": #обнуление ...
 				if request[1] == "map": #... карты
 					self.data["map"] = []
@@ -343,7 +430,7 @@ class EditorScreen:
 					self.answer = f"Map name: {self.data["map_name"]}; CHR count: {len(self.data["enemies"])+len(self.data["allies"])+len(self.data["enemies_tied_to_the_script"])}; Checkpoints count: {len(self.data["checkpoints"])}"
 				elif request_1 == "cell": #... выбранной клетки
 					if self.selected_cell != None:
-						self.answer = f"Cell: x {self.selected_cell.x} y {self.selected_cell.y}; Type: {self.selected_cell.type} / {next((key for key, value in sprits.OBSTACLE_MAP.items() if value == self.selected_cell.type), None)}"
+						self.answer = f"Cell: x {self.selected_cell.x} y {self.selected_cell.y}; Type: {self.selected_cell.type} / Angle: {self.selected_cell.angle} / Group: {self.selected_cell.group}"
 					else:
 						self.answer = "No selected cell"
 				elif request_1 == "chr": #... персонажа
@@ -367,7 +454,7 @@ class EditorScreen:
 		for x in range(int(size[0])):
 			self.data["map"].append([])
 			for _ in range(int(size[1])):
-				self.data["map"][x].append("o")
+				self.data["map"][x].append("q_0_0")
 	
 	def _add_row(self, add_invert: bool):
 		'''
@@ -380,9 +467,9 @@ class EditorScreen:
 		
 		for _ in range(len(self.data["map"][1])):
 			if add_invert:
-				self.data["map"][0].append("o")
+				self.data["map"][0].append("q_0_0")
 			else:
-				self.data["map"][-1].append("o")
+				self.data["map"][-1].append("q_0_0")
 	
 	def _add_column(self, add_invert: bool):
 		'''
@@ -390,48 +477,65 @@ class EditorScreen:
 		'''
 		for x in range(len(self.data["map"])):
 			if add_invert:
-				self.data["map"][x].insert(0, "o")
+				self.data["map"][x].insert(0, "q_0_0")
 			else:
-				self.data["map"][x].append("o")
+				self.data["map"][x].append("q_0_0")
+	
+	def __map_translation(self):
+		'''
+		генерация карты
+		'''
+		self.cells_list = []
+		coord = [0, 0]
+		for y, line in enumerate(init.game_map["map"]):
+			for x, cell in enumerate(line):
+				cell = Obstacle([coord[0]*config.CELL_SIZE, coord[1]*config.CELL_SIZE], [x, y], cell)
+				self.cells_list.append(cell)
+				coord[0] += 1
+			coord[0] = 0
+			coord[1] += 1
 	
 	def _show_map(self):
 		'''
 		Отрисовывает карту
 		'''
-		init.obstacles.empty()
+		init.chr_collision.empty()
+		init.bullet_collision.empty()
+		init.chr_collision_and_bullet_collision.empty()
+		init.no_collision.empty()
 		init.markers.empty()
 
-		self.cell_list = []
 		coord = [0, 0]
-		for x, line in enumerate(self.data["map"]):
-			for y, cell in enumerate(line):
+		for y, line in enumerate(self.data["map"]):
+			for x, cell in enumerate(line):
 				if True:
 					temp_coord = [config.zero_coordinate[0]+coord[0]*config.CELL_SIZE, config.zero_coordinate[1]+coord[1]*config.CELL_SIZE]
 					if temp_coord[0] > 0 or temp_coord[0]+config.CELL_SIZE > 0:
 						if temp_coord[0] > config.window_size[0] or temp_coord[1] > config.window_size[1]:
 							break
 						if temp_coord[1] > 0 or temp_coord[1]+config.CELL_SIZE > 0:
-							cell = Obstacle(temp_coord, [x, y], cell)
-							cell.x = x
-							cell.y = y
-							if self.selected_cell != None:
-								if self.selected_cell.x == cell.x and self.selected_cell.y == cell.y:
-									m_cell = M_Mark(temp_coord, [x, y])
-									init.markers.add(m_cell)
-							if cell.type == 19:
-								s_cell = S_Mark(temp_coord, [x, y])
-								self.s_cell_list.append(s_cell)
-								init.markers.add(s_cell)
-							elif cell.type == 40:
-								f_cell = F_Mark(temp_coord, [x, y])
-								init.markers.add(f_cell)
-							for checkpoint in self.data["checkpoints"]:
-								if self.data["checkpoints"][checkpoint] == [y, x]:
-									c_cell = C_Mark(temp_coord, [x, y])
-									self.c_cell_list.append(c_cell)
-									init.markers.add(c_cell)
-							self.cell_list.append(cell)
-							init.obstacles.add(cell)
+							for cell_in_list in self.cells_list:
+								if cell_in_list.coords == [x, y]:
+									cell_in_list.add_in_group_group()
+									cell_in_list.rect.topleft = temp_coord
+									cell_in_list.x = x
+									cell_in_list.y = y
+									if self.selected_cell != None:
+										if self.selected_cell.x == cell_in_list.x and self.selected_cell.y == cell_in_list.y:
+											m_cell = M_Mark(temp_coord, [x, y])
+											init.markers.add(m_cell)
+									if cell_in_list.group == "2" and cell_in_list.type == "q":
+										s_cell = S_Mark(temp_coord, [x, y])
+										self.s_cell_list.append(s_cell)
+										init.markers.add(s_cell)
+									elif cell_in_list.group == "3":
+										f_cell = F_Mark(temp_coord, [x, y])
+										init.markers.add(f_cell)
+									for checkpoint in self.data["checkpoints"]:
+										if self.data["checkpoints"][checkpoint] == [x, y]:
+											c_cell = C_Mark(temp_coord, [x, y])
+											self.c_cell_list.append(c_cell)
+											init.markers.add(c_cell)
 					coord[0] += 1
 			coord[0] = 0
 			coord[1] += 1
@@ -470,19 +574,41 @@ class EditorScreen:
 		Находит клетку на которую было сделанно нажатие
 		'''
 		mouse_pos = py.mouse.get_pos()
-		for cell in self.cell_list:
+		for cell in self.cells_list:
 			if cell.rect.collidepoint(mouse_pos):
 				self.selected_cell = cell
-				return
+				break
 	
 	def _cell_letter_translation(self, request: str):
 		'''
 		Переводит абстрактный запрос в используеммое для клетки обозначение
 		'''
-		for translation in sprits.TRANSLATION:
-			if request in translation:
-				return translation[0]
-		return "o"
+		request = request.split(".")
+		for translation in sprits.COMMAND_TRANSLATION:
+			print("search:", request, translation)
+			if request[0] in translation:
+				print("find:", request[0], "in", translation)
+				answer = f"{translation[0]}_{self._get_request(request, 1, 0)}_{self._get_cell_group(request, 2)}"
+				print("answer:", answer)
+				return answer
+		return "q_0_0"
+
+	def _get_cell_group(self, request: str, index: int):
+		'''
+		Получает группу клетки
+		'''
+		group = self._get_request(request, index, 0)
+		if group in ["0", "1", "2", "3"]:
+			return group
+		else:
+			if group in ["no collision", "no colli", "no"]:
+				return "2"
+			elif group in ["chr collision", "chr colli", "chr"]:
+				return "3"
+			elif group in ["bullet collision", "bullet colli", "bullet", "b"]:
+				return "1"
+			else:
+				return "0"
 
 	def _weapon_translation(self, weapon: str):
 		if weapon in ["Lasgun", "L", "1"]:
@@ -531,7 +657,7 @@ class EditorScreen:
 			for event in events:
 				if event.type == py.KEYDOWN:
 					if event.key == py.K_RETURN:
-						self._processing_input(self.text_input)
+						self._processing_input_map_editor(self.text_input)
 					self._show_answer()
 					if event.key == py.K_UP:
 						self.camera_moving["up"] = True
@@ -563,3 +689,15 @@ class EditorScreen:
 					config.zero_coordinate[0] -= 15
 				if self.camera_moving["left"]:
 					config.zero_coordinate[0] += 15
+
+		elif config.state_of_editor["editing main character"]:
+			self.text_input.update(events)
+			init.screen.blit(self.text_input.surface, (config.CELL_SIZE*3, config.CELL_SIZE))
+
+			self._show_player()
+
+			for event in events:
+				if event.type == py.KEYDOWN:
+					if event.key == py.K_RETURN:
+						self._processing_input_main_character_editor(self.text_input)
+					self._show_answer()

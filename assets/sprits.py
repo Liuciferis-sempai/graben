@@ -3,6 +3,7 @@ from assets.image_loader import resource_path
 import assets.config as config
 
 #Terrein
+'''
 DIRT = py.image.load(resource_path("assets\image\Terrein\dirt.png"))
 T_V = py.image.load(resource_path("assets\image\Terrein\_trench_V.png"))
 T_G = py.image.load(resource_path("assets\image\Terrein\_trench_G.png"))
@@ -174,6 +175,128 @@ IMAGE_MAP = {
     40: py.transform.scale(DIRT, (config.CELL_SIZE, config.CELL_SIZE)),
     41: py.transform.scale(F, (config.CELL_SIZE, config.CELL_SIZE)),
 }
+'''
+
+VERSION_TRANSLATION = {
+    "o": "q_0_0",
+	"T": "R_90_2",
+	"t": "R_0_2",
+	"A": "z_0_2",
+	"Q": "T_0_2",
+	"W": "T_180_2",
+	"E": "T_90_2",
+	"R": "T_-90_2",
+	"Z": "t_0_2",
+	"U": "t_90_2",
+	"I": "t_180_2",
+	"P": "t_-90_2",
+	"l": "p_0_0",
+	"M": "Z_0_2",
+	"B": "u_0_3",
+	"e": "P_0_2",
+	"q": "Q_0_2",
+	"w": "e_0_2",
+	"b": "u_90_3",
+	"s": "q_0_2",
+	"K": "s_0_0",
+	"k": "A_0_2",
+	"h": "i_0_1",
+	"H": "I_0_1",
+	"a": "U_0_3",
+	"n": "O_0_0",
+    "d": "O_0_0",
+    "r": "o_0_3",
+    "z": "o_90_3",
+    "u": "o_-90_3",
+    "i": "o_180_3",
+    "O": "E_0_2",
+    "p": "r_0_2",
+    "S": "a_0_2",
+    "D": "a_90_2",
+    "f": "a_-90_2",
+    "F": "a_180_2"
+}
+
+TERRAIN_IMAGES = {
+    "dirt": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\dirt.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "cell 1": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\_trench_cell_1.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "cell 2": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\_trench_cell_2.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "cell 3": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\_trench_cell_3.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "cell 4": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\_trench_cell_4.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "trench": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\_trench.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "trench cross 2 entry": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\_trench_cross_2_entry.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "trench cross 3 entry": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\_trench_cross_3_entry.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "trench cross 4 entry": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\_trench_cross_4_entry.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "trench mg": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\_trench_MG.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "trench with obstacle": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\_trench_with_obstacle.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "art ammo": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\Art_ammo.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "art barrel": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\Art_barrel.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "art layer station": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\Art_layer_station.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "bed": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\Bed.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "bunker 0": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\Bunker_0.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "bunker 1": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\Bunker_1.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "dirt with barbwire": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\dirt_with_barbwire.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "empty trench": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\empty_trench.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "mortal": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\mortal.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "stone floor": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\stone_floor.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "stone wall": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\wall.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+}
+
+MARKS_IMAGES = {
+    "c": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\c.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "p": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\p.png")), (config.CELL_SIZE//2, config.CELL_SIZE//2)),
+    "f": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\F.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "frame": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\Frame.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+    "s": py.transform.scale(py.image.load(resource_path("assets\image\Terrein\s.png")), (config.CELL_SIZE, config.CELL_SIZE)),
+}
+
+COMMAND_TRANSLATION = [
+    ["q", "dirt"],
+    ["Q", "cell 1"],
+    ["e", "cell 2"],
+    ["E", "cell 3"],
+    ["r", "cell 4"],
+    ["R", "trench", "t 1"],
+    ["t", "trench cross 2 entry", "t 2"],
+    ["T", "trench cross 3 entry", "t 3"],
+    ["z", "trench cross 4 entry", "t 4"],
+    ["Z", "trench mg"],
+    ["u", "trench with obstacle"],
+    ["U", "art ammo"],
+    ["i", "art barrel"],
+    ["I", "art layer station"],
+    ["o", "bed"],
+    ["O", "bunker 0"],
+    ["p", "dirt with barbwire"],
+    ["P", "empty trench"],
+    ["a", "mortal"],
+    ["A", "stone floor"],
+    ["s", "stone wall"],
+]
+
+BLIT_MAP = {
+    "q": (TERRAIN_IMAGES["dirt"]),
+    "Q": (TERRAIN_IMAGES["cell 1"]),
+    "e": (TERRAIN_IMAGES["cell 2"]),
+    "E": (TERRAIN_IMAGES["cell 3"]),
+    "r": (TERRAIN_IMAGES["cell 4"]),
+    "R": (TERRAIN_IMAGES["trench"]),
+    "t": (TERRAIN_IMAGES["trench cross 2 entry"]),
+    "T": (TERRAIN_IMAGES["trench cross 3 entry"]),
+    "z": (TERRAIN_IMAGES["trench cross 4 entry"]),
+    "Z": (TERRAIN_IMAGES["trench mg"]),
+    "u": (TERRAIN_IMAGES["trench with obstacle"]),
+    "U": (TERRAIN_IMAGES["art ammo"]),
+    "i": (TERRAIN_IMAGES["art barrel"]),
+    "I": (TERRAIN_IMAGES["art layer station"]),
+    "o": (TERRAIN_IMAGES["bed"]),
+    "O": (TERRAIN_IMAGES["bunker 0"]),
+    "p": (TERRAIN_IMAGES["dirt with barbwire"]),
+    "P": (TERRAIN_IMAGES["empty trench"]),
+    "a": (TERRAIN_IMAGES["mortal"]),
+    "A": (TERRAIN_IMAGES["stone floor"]),
+    "s": (TERRAIN_IMAGES["stone wall"]),
+}
 
 CHARACTERS = {
 	"WALRAM": {
@@ -233,7 +356,7 @@ BULLETS = {
     "LASER": py.transform.scale(py.image.load(resource_path(f"assets/image/bullets/laser.png")).convert_alpha(), (config.CELL_SIZE//10, config.CELL_SIZE//4)),
     "BIGBOLTER": py.transform.scale(py.image.load(resource_path(f"assets/image/bullets/bigbolter.png")).convert_alpha(), (config.CELL_SIZE//10, config.CELL_SIZE//4)),
     "FIRE": py.transform.scale(py.image.load(resource_path(f"assets/image/bullets/fire.png")).convert_alpha(), (config.CELL_SIZE//10, config.CELL_SIZE//4)),
-    "GRENADE": py.transform.scale(py.image.load(resource_path(f"assets/image/bullets/grenade.png")).convert_alpha(), (config.CELL_SIZE//10, config.CELL_SIZE//4)),
+    "FRAGMENTATION GRENADE": py.transform.scale(py.image.load(resource_path(f"assets/image/bullets/fragmentation grenade.png")).convert_alpha(), (config.CELL_SIZE//10, config.CELL_SIZE//4)),
     "NOTLASER": py.transform.scale(py.image.load(resource_path(f"assets/image/bullets/notlaser.png")).convert_alpha(), (config.CELL_SIZE//10, config.CELL_SIZE//4)),
     "PLASMA": py.transform.scale(py.image.load(resource_path(f"assets/image/bullets/plasma.png")).convert_alpha(), (config.CELL_SIZE//10, config.CELL_SIZE//4)),
     "BAYONET": py.transform.scale(py.image.load(resource_path(f"assets/image/bullets/bayonet.png")).convert_alpha(), (config.CELL_SIZE//10, config.CELL_SIZE//4)),
@@ -248,9 +371,10 @@ ICONS = {
     "HP": py.transform.scale(py.image.load(resource_path("assets\image\other\hp.png")), (config.CELL_SIZE, config.CELL_SIZE)),
     "PLASMA_MODE_0": py.transform.scale(py.image.load(resource_path("assets\image\other\plasma_mod_0.png")), (config.CELL_SIZE, config.CELL_SIZE)),
     "PLASMA_MODE_1": py.transform.scale(py.image.load(resource_path("assets\image\other\plasma_mod_1.png")), (config.CELL_SIZE, config.CELL_SIZE)),
-    "GRENADE": py.transform.scale(py.image.load(resource_path("assets\image\weapon\Grenade.png")), (config.CELL_SIZE//2, config.CELL_SIZE//2)),
+    "FRAGMENTATION GRENADE": py.transform.scale(py.image.load(resource_path("assets\image\weapon\Fragmentation Grenade.png")), (config.CELL_SIZE//2, config.CELL_SIZE//2)),
     "LASGUN": py.transform.scale(py.image.load(resource_path(f"assets\image\weapon\Lasgun.png")), (config.CELL_SIZE*2, config.CELL_SIZE)),
     "BOLTPISTOL": py.transform.scale(py.image.load(resource_path(f"assets\image\weapon\Boltpistol.png")), (config.CELL_SIZE*2, config.CELL_SIZE)),
     "PLASMAGUN": py.transform.scale(py.image.load(resource_path(f"assets\image\weapon\Plasmagun.png")).convert_alpha(), (config.CELL_SIZE//2, config.CELL_SIZE//4)),
+    "BAYONET": py.transform.scale(py.image.load(resource_path(f"assets\image\weapon\Bayonet.png")).convert_alpha(), (config.CELL_SIZE*2, config.CELL_SIZE)),
     "NONE": py.transform.scale(py.image.load(resource_path(f"assets\image\weapon\_none.png")).convert_alpha(), (config.CELL_SIZE//2, config.CELL_SIZE//4)),
 }
