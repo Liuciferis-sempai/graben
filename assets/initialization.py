@@ -17,6 +17,7 @@ chr_collision = py.sprite.Group() #группа для проверки на к�
 bullet_collision = py.sprite.Group() #группа для проверки на колюзию у пуль
 chr_collision_and_bullet_collision = py.sprite.Group() #группа для проверки на колюзию у персонажей и пуль
 no_collision =  py.sprite.Group() #все остальные
+interactive_cells = py.sprite.Group() #все интерактивные клетки
 bullets = py.sprite.Group()
 items = py.sprite.Group()
 markers = py.sprite.Group()

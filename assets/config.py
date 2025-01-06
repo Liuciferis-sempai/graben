@@ -8,8 +8,6 @@ FONT_SIZE = 30
 ANIMATION_COOLDOWN = 200
 BUNKER_COOLDOWN = [100, 200]
 
-timer = 0
-
 zero_coordinate = [0, 0]
 SCATTER = CELL_SIZE//3
 last_time_update = 0
@@ -60,8 +58,8 @@ FIRE_EXIST = 5
 #Характеристики врагов
 BLOOD_PACK_SOLDIER_HP = 1
 BLOOD_PACK_SOLDIER_SPEED = 5
-WORLD_EATER_HP_MAX = 1000
-WORLD_EATER_SPEED = 12
+WORLD_EATER_HP_MAX = 500
+WORLD_EATER_SPEED = 10
 
 #Характеристики Союзников
 COMMISSAR_SPEED = 10

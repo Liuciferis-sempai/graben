@@ -133,8 +133,8 @@ class Charger(AI):
 		)
 		self.wait_began_at = 0
 		self.wait_frame = {
-			"min": 600,
-			"max": 2000
+			"min": 1200,
+			"max": 3000
 		}
 		self.fire_began_at = 0
 		self.fire_frame = {

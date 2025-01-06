@@ -202,6 +202,7 @@ class Scripts:
 	
 	def end_of_cut_scene(self):
 		if self.scripts_chekpoints["was_end_fight_with_world_eater"]:
+			print(self.boss)
 			init.board.remove_character(self.boss, "boss")
 			self.boss.kill()
 			init.gui.is_boss_fight = False
@@ -222,6 +223,9 @@ class Scripts:
 		init.bullets.empty()
 		init.enemies.empty()
 		init.allies.empty()
+		init.board.remove_character("all", "ally")
+		init.board.remove_character("all", "enemy")
+		init.board.remove_character("all", "boss")
 		config.state_of_the_game["menu"] = True
 	
 	def save_settings(self):
@@ -355,6 +359,17 @@ class Scripts:
 			self.scripts_chekpoints[scripts_checkpoint] = False
 		for moving in config.moving:
 			config.moving[moving] = False
+		if self.boss != None:
+			init.board.remove_character(self.boss, "boss")
+			self.boss.kill()
+			init.gui.is_boss_fight = False
+			init.gui.boss = None
+		init.items.empty()
+		init.bullets.empty()
+		init.enemies.empty()
+		init.allies.empty()
+		init.board.remove_character("all", "ally")
+		init.board.remove_character("all", "enemy")
 
 	def show_message_on_display(self, message: str, position: list, font: int, color: tuple, content: str):
 		'''

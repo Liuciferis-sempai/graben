@@ -129,8 +129,10 @@ class Entity(py.sprite.Sprite):
 						init.board.remove_character(self, "enemy")
 						self.kill()
 						for enemy in init.enemies:
-							if self._has_no_obstacles(enemy):
-								enemy.ai.triggered(self)
+							if enemy.state != "dead":
+								if self._has_no_obstacles(enemy):
+									enemy.ai.triggered(self)
+					FallenWeapon(self.active_weapon, self.rect.center)
 					return
 				self.frame_index = 0
 			self.picture = self.animation[self.state][self.frame_index]
@@ -173,17 +175,13 @@ class Entity(py.sprite.Sprite):
 						dx = -dx
 						if self.name == "walram":
 							config.moving["left"] = False
-		for obj in init.no_collision:
-			if temp_sprite.rect.colliderect(obj.rect):
-				if obj.coords in init.game_map["checkpoints"].values(): #проверка на контакт с тригерами скрипта
-					init.scripts.checkpoint(obj.coords)
-				if obj.type in ["Q", "e", "E", "r"]: #проверка на контакт с боеприпасами
-						init.board.group_for_action.append(obj)
-		
 		if self.name == "walram":
-			for obj in init.items: #проверка на взаимодействие с упавшим оружием
+			for obj in init.interactive_cells:
 				if temp_sprite.rect.colliderect(obj.rect):
-					init.board.group_for_action.append(obj)
+					if obj.coords in init.game_map["checkpoints"].values(): #проверка на контакт с тригерами скрипта
+						init.scripts.checkpoint(obj.coords)
+					if obj.type in ["Q", "e", "E", "r"]: #проверка на контакт с боеприпасами
+							init.board.group_for_action.append(obj)
 
 		new_rect = py.Rect(self.rect.left, self.rect.top + dy, self.rect.width, self.rect.height)
 		temp_sprite = py.sprite.Sprite()
@@ -213,17 +211,14 @@ class Entity(py.sprite.Sprite):
 						dy = -dy
 						if self.name == "walram":
 							config.moving["forward"] = False
-		for obj in init.no_collision:
-			if temp_sprite.rect.colliderect(obj.rect):
-				if obj.coords in init.game_map["checkpoints"].values(): #проверка на контакт с тригерами скрипта
-					init.scripts.checkpoint(obj.coords)
-				if obj.type in ["Q", "e", "E", "r"]: #проверка на контакт с боеприпасами
-					init.board.group_for_action.append(obj)
 
 		if self.name == "walram":
-			for obj in init.items: #проверка на взаимодействие с упавшим оружием
+			for obj in init.interactive_cells:
 				if temp_sprite.rect.colliderect(obj.rect):
-					init.board.group_for_action.append(obj)
+					if obj.coords in init.game_map["checkpoints"].values(): #проверка на контакт с тригерами скрипта
+						init.scripts.checkpoint(obj.coords)
+					if obj.type in ["Q", "e", "E", "r"]: #проверка на контакт с боеприпасами
+						init.board.group_for_action.append(obj)
 
 		return dx, dy
 	
@@ -324,7 +319,6 @@ class Entity(py.sprite.Sprite):
 		'''
 		self.dead = True
 		self.state = "dead"
-		FallenWeapon(self.active_weapon, self.rect.center)
 
 class Walram(Entity):
 	def __init__(self):
@@ -520,11 +514,11 @@ class WorldEaater(Entity):
 		if bullet.name == "laser":
 			self.hp -= 30
 		elif bullet.name == "bolter":
-			self.hp -= 30
+			self.hp -= 40
 		elif bullet.name == "bigbolter":
 			self.hp -= 200
 		elif bullet.name == "plasma":
-			self.hp -= 150
+			self.hp -= 100
 		elif bullet.name == "grenade":
 			self.hp -= 50
 		elif bullet.name == "bayonet":

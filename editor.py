@@ -61,6 +61,7 @@ class EditorScreen:
 		self.s_cell_list = []
 		self.c_cell_list = []
 		self.character_list = []
+		self.second_selected_cell = None
 		init.scripts.show_message_on_display("", [config.CELL_SIZE*3, config.CELL_SIZE*1.5], config.FONT_SIZE, config.COLOR_RED, "")
 	
 	def choice_map(self, map_num: int):
@@ -388,9 +389,8 @@ class EditorScreen:
 								break
 
 			elif request[0] == "rp": #обрабатывает замену ячейки
-				print(self.selected_cell, self.selected_cell != None)
 				if self.selected_cell != None: #через выбору ячейки по клику
-					self.data["map"][self.selected_cell.x][self.selected_cell.y] = self._cell_letter_translation(" ".join(request[2:]))
+					self.data["map"][self.selected_cell.y][self.selected_cell.x] = self._cell_letter_translation(" ".join(request[2:]))
 				elif request[1] == "c": #через координаты
 					self.data["map"][int(request[2])][int(request[3])] = self._cell_letter_translation(" ".join(request[4:]))
 				self.__map_translation()
@@ -421,6 +421,10 @@ class EditorScreen:
 					self.save()
 				elif request[1] == "zero":#... нулевой координаты
 					self.data["zero_point"] = [config.zero_coordinate[0] // config.CELL_SIZE, config.zero_coordinate[1] // config.CELL_SIZE]
+				elif request[1] == "cell":
+					if self.selected_cell != None:
+						self.second_selected_cell = self.selected_cell
+						self.selected_cell = None
 			elif request[0] == "set": #задать...
 				if request[1] == "name": #... имя карты
 					self.data["map_name"] = request[2]
@@ -443,6 +447,14 @@ class EditorScreen:
 							self.answer = "No character in selected cell"
 					else:
 						self.answer = "No selected cell"
+			elif request[0] == "fill": #заполнить...
+				if self.second_selected_cell != None and self.selected_cell != None:
+					for y in range(self.second_selected_cell.y, self.selected_cell.y+1):
+						for x in range(self.second_selected_cell.x, self.selected_cell.x+1):
+							self.data["map"][y][x] = self._cell_letter_translation(" ".join(request[1:]))
+					self.__map_translation()
+					self.second_selected_cell = None
+					self.selected_cell = None
 		except Exception as e:
 			self.answer = str(e)
 			print(e)
@@ -490,6 +502,8 @@ class EditorScreen:
 		for y, line in enumerate(init.game_map["map"]):
 			for x, cell in enumerate(line):
 				cell = Obstacle([coord[0]*config.CELL_SIZE, coord[1]*config.CELL_SIZE], [x, y], cell)
+				cell.x = x
+				cell.y = y
 				self.cells_list.append(cell)
 				coord[0] += 1
 			coord[0] = 0
@@ -503,6 +517,7 @@ class EditorScreen:
 		init.bullet_collision.empty()
 		init.chr_collision_and_bullet_collision.empty()
 		init.no_collision.empty()
+		init.interactive_cells.empty()
 		init.markers.empty()
 
 		coord = [0, 0]
@@ -516,15 +531,13 @@ class EditorScreen:
 						if temp_coord[1] > 0 or temp_coord[1]+config.CELL_SIZE > 0:
 							for cell_in_list in self.cells_list:
 								if cell_in_list.coords == [x, y]:
-									cell_in_list.add_in_group_group()
+									cell_in_list.add_to_group()
 									cell_in_list.rect.topleft = temp_coord
-									cell_in_list.x = x
-									cell_in_list.y = y
 									if self.selected_cell != None:
 										if self.selected_cell.x == cell_in_list.x and self.selected_cell.y == cell_in_list.y:
 											m_cell = M_Mark(temp_coord, [x, y])
 											init.markers.add(m_cell)
-									if cell_in_list.group == "2" and cell_in_list.type == "q":
+									if cell_in_list.group == "4" and cell_in_list.type == "q":
 										s_cell = S_Mark(temp_coord, [x, y])
 										self.s_cell_list.append(s_cell)
 										init.markers.add(s_cell)
@@ -577,7 +590,9 @@ class EditorScreen:
 		for cell in self.cells_list:
 			if cell.rect.collidepoint(mouse_pos):
 				self.selected_cell = cell
-				break
+				print(self.selected_cell)
+				return
+		print("cell not found")
 	
 	def _cell_letter_translation(self, request: str):
 		'''
@@ -587,9 +602,7 @@ class EditorScreen:
 		for translation in sprits.COMMAND_TRANSLATION:
 			print("search:", request, translation)
 			if request[0] in translation:
-				print("find:", request[0], "in", translation)
 				answer = f"{translation[0]}_{self._get_request(request, 1, 0)}_{self._get_cell_group(request, 2)}"
-				print("answer:", answer)
 				return answer
 		return "q_0_0"
 
@@ -602,11 +615,13 @@ class EditorScreen:
 			return group
 		else:
 			if group in ["no collision", "no colli", "no"]:
-				return "2"
+				return "4"
 			elif group in ["chr collision", "chr colli", "chr"]:
 				return "3"
 			elif group in ["bullet collision", "bullet colli", "bullet", "b"]:
 				return "1"
+			elif group in ["chr and bullet collision", "chr and b"]:
+				return "2"
 			else:
 				return "0"
 

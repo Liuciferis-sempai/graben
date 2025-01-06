@@ -53,7 +53,7 @@ class Lasgun(Weapon):
 
 class Plasmagun(Weapon):
 	def __init__(self):
-		super().__init__("Plasmagun", "plasma", False, 1000, config.CELL_SIZE*7, 5, 30)
+		super().__init__("Plasmagun", "plasma", False, 1000, config.CELL_SIZE*7, 35, 0)
 		self.has_second_shoot_mod = True
 
 class Bayonet(Weapon):

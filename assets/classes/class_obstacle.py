@@ -41,15 +41,17 @@ class Obstacle(py.sprite.Sprite):
         except:
             return default
 
-    def add_in_group_group(self):
+    def add_to_group(self):
         if self.group == "0":
             init.chr_collision_and_bullet_collision.add(self)
         elif self.group == "1":
             init.bullet_collision.add(self)
         elif self.group == "2":
-            init.no_collision.add(self)
+            init.interactive_cells.add(self)
         elif self.group == "3":
             init.chr_collision.add(self)
+        elif self.group == "4":
+            init.no_collision.add(self)
     
     def animation_update(self):
         if py.time.get_ticks() - self.last_animation_update_time > self.cooldown:

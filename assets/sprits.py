@@ -316,7 +316,15 @@ CHARACTERS = {
             "SHOOTING": [py.image.load(resource_path(f"assets\image\walram\Boltpistol\_shooting\{i}.png")).convert_alpha() for i in range(4)],
             "AIMING": [py.image.load(resource_path(f"assets\image\walram\Boltpistol\_aiming\{i}.png")).convert_alpha() for i in range(3)],
             "DEAD": [py.image.load(resource_path(f"assets\image\walram\Boltpistol\_dead\{i}.png")).convert_alpha() for i in range(2)]
-		}
+		},
+        "PLASMAGUN": {
+             "WAITING": [py.image.load(resource_path(f"assets\image\walram\Plasmagun\_waiting\{i}.png")).convert_alpha() for i in range(3)],
+            "WALKING": [py.image.load(resource_path(f"assets\image\walram\Plasmagun\_walking\{i}.png")).convert_alpha() for i in range(6)],
+            "RUNNING": [py.image.load(resource_path(f"assets\image\walram\Plasmagun\_running\{i}.png")).convert_alpha() for i in range(6)],
+            "SHOOTING": [py.image.load(resource_path(f"assets\image\walram\Plasmagun\_shooting\{i}.png")).convert_alpha() for i in range(4)],
+            "AIMING": [py.image.load(resource_path(f"assets\image\walram\Plasmagun\_aiming\{i}.png")).convert_alpha() for i in range(3)],
+            "DEAD": [py.image.load(resource_path(f"assets\image\walram\Plasmagun\_dead\{i}.png")).convert_alpha() for i in range(2)]
+        }
 	},
     "BLOODPACKSOLDIER": {
         "PORTRAIT": py.transform.scale(py.image.load(resource_path("assets\image\portraits\_blood_pack_soldier.png")), (config.CELL_SIZE, config.CELL_SIZE*2)),
@@ -374,7 +382,7 @@ ICONS = {
     "FRAGMENTATION GRENADE": py.transform.scale(py.image.load(resource_path("assets\image\weapon\Fragmentation Grenade.png")), (config.CELL_SIZE//2, config.CELL_SIZE//2)),
     "LASGUN": py.transform.scale(py.image.load(resource_path(f"assets\image\weapon\Lasgun.png")), (config.CELL_SIZE*2, config.CELL_SIZE)),
     "BOLTPISTOL": py.transform.scale(py.image.load(resource_path(f"assets\image\weapon\Boltpistol.png")), (config.CELL_SIZE*2, config.CELL_SIZE)),
-    "PLASMAGUN": py.transform.scale(py.image.load(resource_path(f"assets\image\weapon\Plasmagun.png")).convert_alpha(), (config.CELL_SIZE//2, config.CELL_SIZE//4)),
+    "PLASMAGUN": py.transform.scale(py.image.load(resource_path(f"assets\image\weapon\Plasmagun.png")).convert_alpha(), (config.CELL_SIZE*2, config.CELL_SIZE)),
     "BAYONET": py.transform.scale(py.image.load(resource_path(f"assets\image\weapon\Bayonet.png")).convert_alpha(), (config.CELL_SIZE*2, config.CELL_SIZE)),
-    "NONE": py.transform.scale(py.image.load(resource_path(f"assets\image\weapon\_none.png")).convert_alpha(), (config.CELL_SIZE//2, config.CELL_SIZE//4)),
+    "NONE": py.transform.scale(py.image.load(resource_path(f"assets\image\weapon\_none.png")).convert_alpha(), (config.CELL_SIZE*2, config.CELL_SIZE)),
 }

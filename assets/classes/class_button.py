@@ -1,6 +1,7 @@
 import pygame as py
 import assets.config as config
 import assets.initialization as init
+from datetime import datetime
 
 class Button(py.sprite.Sprite):
 	def __init__(self, position: tuple):
@@ -88,22 +89,24 @@ class ShowStatistics(Button):
 		config.state_of_the_game["main menu"] = False
 		config.state_of_the_game["statistics"] = True
 		print("after click: state_of_the_game[main menu]: ", config.state_of_the_game["main menu"], "/n", "state_of_the_game[statistics]: ", config.state_of_the_game["statistics"])
-		init.save["statistics"]["time in game"] += py.time.get_ticks() - config.last_time_update
-		config.last_time_update = py.time.get_ticks()
+		time = datetime.now() - config.last_time_update
+		time = str(time)
+		time = time.split(".")
+		time = time[0].split(":")
+		hour = time[0]
+		minute = time[1]
+		second = time[2]
+		init.save["statistics"]["time in game"]["h"] += int(hour)
+		init.save["statistics"]["time in game"]["m"] += int(minute)
+		init.save["statistics"]["time in game"]["s"] += int(second)
+		hour = init.save["statistics"]["time in game"]["h"]
+		minute = init.save["statistics"]["time in game"]["m"]
+		second = init.save["statistics"]["time in game"]["s"]
+		config.last_time_update = datetime.now()
 		init.scripts.save_save()
-		init.scripts.show_message_on_display(f"{init.languages[init.settings["language"]]["NUMBER_OF_DEATHS"]}: {init.save["statistics"]["number of deaths"]}", ["center", config.window_size[1]//2-config.CELL_SIZE], config.FONT_SIZE, config.COLOR_WHITE)
-		init.scripts.show_message_on_display(f"{init.languages[init.settings["language"]]["NUMBER_OF_KILLS"]}: {init.save["statistics"]["number of kills"]}", ["center", config.window_size[1]//2], config.FONT_SIZE, config.COLOR_WHITE)
-		time = init.save["statistics"]["time in game"]
-		second = time // 1000
-		minute = 0
-		hour = 0
-		while second > 60:
-			second -= 60
-			minute += 1
-		while minute > 60:
-			minute -= 60
-			hour += 1
-		init.scripts.show_message_on_display(f"{init.languages[init.settings["language"]]["TIME_IN_GAME"]}: {hour} h {minute} m {second} s", ["center", config.window_size[1]//2+config.CELL_SIZE], config.FONT_SIZE, config.COLOR_WHITE)
+		init.scripts.show_message_on_display(f"{init.languages[init.settings["language"]]["NUMBER_OF_DEATHS"]}: {init.save["statistics"]["number of deaths"]}", ["center", config.window_size[1]//2-config.CELL_SIZE], config.FONT_SIZE, config.COLOR_WHITE, "NUMBER_OF_DEATH")
+		init.scripts.show_message_on_display(f"{init.languages[init.settings["language"]]["NUMBER_OF_KILLS"]}: {init.save["statistics"]["number of kills"]}", ["center", config.window_size[1]//2], config.FONT_SIZE, config.COLOR_WHITE, "NUMBER_OF_KILLS")
+		init.scripts.show_message_on_display(f"{init.languages[init.settings["language"]]["TIME_IN_GAME"]}: {hour} h {minute} m {second} s", ["center", config.window_size[1]//2+config.CELL_SIZE], config.FONT_SIZE, config.COLOR_WHITE, "TIME_IN_GAME")
 
 class ExitGameButton(Button):
 	def __init__(self, position: tuple):
@@ -388,10 +391,10 @@ class LevelStartButton(Button):
 			return
 		print("befor click: state_of_the_game[level selection]: ", config.state_of_the_game["level selection"], "/n", "state_of_the_game[game]: ", config.state_of_the_game["game"])
 		config.state_of_the_game["level selection"] = False
+		init.scripts.reload()
 		init.loaded_map = self.level_num
 		init.scripts.load_map(self.level_num)
 		init.board.map.map_translation()
-		init.scripts.reload()
 		init.gui.load_ico()
 		config.state_of_the_game["game"] = True
 		print("after click: state_of_the_game[level selection]: ", config.state_of_the_game["main menu"], "/n", "state_of_the_game[game]: ", config.state_of_the_game["game"])
@@ -448,8 +451,8 @@ class RestartButton(Button):
 	def click(self):
 		print("befor click: state_of_the_game[menu]: ", config.state_of_the_game["menu"], "/n", "state_of_the_game[game]: ", config.state_of_the_game["game"])
 		config.state_of_the_game["menu"] = False
-		init.scripts.load_map(init.loaded_map)
 		init.scripts.reload()
+		init.scripts.load_map(init.loaded_map)
 		config.state_of_the_game["game"] = True
 		print("after click: state_of_the_game[menu]: ", config.state_of_the_game["menu"], "/n", "state_of_the_game[game]: ", config.state_of_the_game["game"])
 

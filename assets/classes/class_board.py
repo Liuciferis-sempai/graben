@@ -68,21 +68,23 @@ class Board:
 		'''
 		Уберает персонажа из списка
 		'''
-
-		if character == "all":
-			if list_type == "enemy":
-				self._enemies_list = []
-			elif list_type == "ally":
-				self._allies_list = []
-			elif list_type == "boss":
-				self._boss_group = []
-		else:
-			if list_type == "enemy":
-				self._enemies_list.remove(character)
-			elif list_type == "ally":
-				self._allies_list.remove(character)
-			elif list_type == "boss":
-				self._boss_group.remove(character)
+		try:
+			if character == "all":
+				if list_type == "enemy":
+					self._enemies_list = []
+				elif list_type == "ally":
+					self._allies_list = []
+				elif list_type == "boss":
+					self._boss_group = []
+			else:
+				if list_type == "enemy":
+					self._enemies_list.remove(character)
+				elif list_type == "ally":
+					self._allies_list.remove(character)
+				elif list_type == "boss":
+					self._boss_group.remove(character)
+		except:
+			return False
 
 	def update_board(self):
 		for boss in self._boss_group:

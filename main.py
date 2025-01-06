@@ -3,16 +3,17 @@ import pygame as py
 py.init()
 py.font.init()
 
-import assets.initialization as init
+from datetime import datetime
 
+import assets.initialization as init
 import assets.config as config
 import assets.sprits as sprits
 from assets.classes.class_button import *
 
-from datetime import datetime
+config.last_time_update = datetime.now()
+print(config.last_time_update)
 
-def main_loop():
-	config.timer = datetime.now()
+def main_loop(): #основной цикл игры
 	clock = py.time.Clock()
 
 	while config.running:
@@ -54,7 +55,16 @@ def main_loop():
 	for chit in init.settings["chits"]:
 		init.settings["chits"][chit] = False
 	init.scripts.save_settings()
-	init.save["statistics"]["time in game"] += py.time.get_ticks() - config.last_time_update
+	time = datetime.now() - config.last_time_update
+	time = str(time)
+	time = time.split(".")
+	time = time[0].split(":")
+	hour = time[0]
+	minute = time[1]
+	second = time[2]
+	init.save["statistics"]["time in game"]["h"] += int(hour)
+	init.save["statistics"]["time in game"]["m"] += int(minute)
+	init.save["statistics"]["time in game"]["s"] += int(second)
 	init.scripts.save_save()
 
 def window_size_adaptation(): #адаптирует игру под изменившиеся размеры экрана, если они менялись
@@ -168,6 +178,8 @@ def editor_loop(): #редактор карт
 	init.chr_collision_and_bullet_collision.draw(init.screen)
 	init.no_collision.update()
 	init.no_collision.draw(init.screen)
+	init.interactive_cells.update()
+	init.interactive_cells.draw(init.screen)
 
 	init.markers.update()
 	init.markers.draw(init.screen)
@@ -283,6 +295,8 @@ def dialogue_loop(): #цикл, когда идёт диалог
 	init.chr_collision_and_bullet_collision.draw(init.screen)
 	init.no_collision.update()
 	init.no_collision.draw(init.screen)
+	init.interactive_cells.update()
+	init.interactive_cells.draw(init.screen)
 
 	init.player_group.update()
 	init.player_group.draw(init.screen)
@@ -329,6 +343,8 @@ def dialogue_loop(): #цикл, когда идёт диалог
 def game_loop(): #игровой цикл
 	init.screen.fill(config.COLOR_DIRT)
 
+	#print("chr", init.chr_collision, "bul", init.bullet_collision,"chr and bul", init.chr_collision_and_bullet_collision, "no", init.no_collision, "int", init.interactive_cells)
+
 	init.chr_collision.update()
 	init.chr_collision.draw(init.screen)
 	init.bullet_collision.update()
@@ -337,6 +353,8 @@ def game_loop(): #игровой цикл
 	init.chr_collision_and_bullet_collision.draw(init.screen)
 	init.no_collision.update()
 	init.no_collision.draw(init.screen)
+	init.interactive_cells.update()
+	init.interactive_cells.draw(init.screen)
 
 	init.items.update()
 	init.items.draw(init.screen)
@@ -402,6 +420,8 @@ def game_loop(): #игровой цикл
 		elif event.type == py.MOUSEBUTTONDOWN:
 			if event.button == 1: #ЛКМ
 				if config.moving["taking aim"]:
+					init.player.shoot()
+				elif init.player.active_weapon == init.player.second_weapon:
 					init.player.shoot()
 				else:
 					init.player.melee_atack()
